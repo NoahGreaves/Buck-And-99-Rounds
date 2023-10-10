@@ -11,6 +11,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] protected float _rotationSpeed = 2f;
 
     protected static float MovementSpeed = 100;
+    protected const float MINDISTANCE = 0.2f;
     private static float _defaultMovementSpeed = 100;
 
     [SerializeField] protected float Health = 100;
@@ -19,7 +20,7 @@ public class Enemy : MonoBehaviour
     private List<Transform> _decoyList = new List<Transform>();
     protected Transform targetPlayer;
 
-    protected GameObject target;
+    protected GameObject PlayerTarget;
     protected bool isLookingAtTarget = false;
 
     public static float SetMoveSpeed(float speed) => MovementSpeed = speed;
@@ -47,7 +48,7 @@ public class Enemy : MonoBehaviour
         if (priorityTarget == null)
             return;
 
-        target = priorityTarget.gameObject;
+        PlayerTarget = priorityTarget.gameObject;
         RotateToLookAt(priorityTarget);
     }
 
@@ -93,18 +94,14 @@ public class Enemy : MonoBehaviour
         return targetPlayer;
     }
 
-    public void OnProjectileCollision(Projectile projectile)
-    {
-        
-    }
-
     protected virtual bool CheckToShootWeapon()
     {
         return false;
     }
 
-    protected virtual void ShootWeapon() 
-    {
-        
-    }
+    public void OnProjectileCollision(Projectile projectile){ }
+
+    protected virtual void ShootWeapon() { }
+
+    protected virtual void Move() { }    
 }
