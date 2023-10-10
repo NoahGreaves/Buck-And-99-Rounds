@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8970926540042823806}
   - component: {fileID: 2391469802851251054}
   - component: {fileID: 9218499432993199231}
-  - component: {fileID: 3801304129419523818}
+  - component: {fileID: -2517549371670955317}
   - component: {fileID: 4197093204152126896}
   m_Layer: 8
   m_Name: Pistol_Bullet_Enemy
@@ -107,7 +107,7 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &3801304129419523818
+--- !u!54 &-2517549371670955317
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -133,7 +133,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!114 &4197093204152126896
 MonoBehaviour:
   m_ObjectHideFlags: 0

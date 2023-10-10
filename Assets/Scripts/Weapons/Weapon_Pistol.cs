@@ -14,6 +14,11 @@ public class Weapon_Pistol : Weapon
         base.ShootWeapon();
     }
 
+    protected override IEnumerator Cooldown()
+    {
+        yield return base.Cooldown();
+    }
+
     protected override void Fire(Vector3 weaponDirection)
     {
         base.Fire(weaponDirection);

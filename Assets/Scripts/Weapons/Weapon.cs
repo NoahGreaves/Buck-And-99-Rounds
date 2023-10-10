@@ -22,7 +22,7 @@ public class Weapon : MonoBehaviour
     // Called From `PlayerShooting` for Player Controls
     public virtual void ShootWeapon() 
     {
-        if (IsOnCooldown)
+        if (this.IsOnCooldown)
         {
             return;
         }

@@ -31,6 +31,7 @@ public class Enemy_Basic : Enemy
         Move();
 
         bool shootWeapon = CheckToShootWeapon();
+        Debug.Log(shootWeapon);
         if (shootWeapon && !_currentWeapon.IsOnCooldown)
         {
             _currentWeapon.ShootWeapon();
@@ -71,6 +72,13 @@ public class Enemy_Basic : Enemy
             return false;
         bool aimedAtCorrectTarget = hit.transform.gameObject == PlayerTarget;
         bool canShoot = aimedAtTarget && aimedAtCorrectTarget;
+
+        // REFACTOR --> MAKE THE ENEMY STOP MOVING AND SHOOT THE PLAYER, MAKE THE ENEMY CHASE PLAYER IF PLAYER LEAVE FOV RADIUS?
+        if (canShoot)
+        {
+            _agent.isStopped = true;
+        }
+
         return canShoot;
     }
 }

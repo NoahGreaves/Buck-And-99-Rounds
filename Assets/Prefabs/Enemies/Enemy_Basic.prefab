@@ -251,6 +251,8 @@ MonoBehaviour:
   _rotationSpeed: 5
   Health: 100
   _currentWeapon: {fileID: 7594881126795674722}
+  _movementSpeed: 25
+  _points: []
 --- !u!114 &4653006607034556585
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -264,7 +266,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _viewRadius: 16
-  _viewAngle: 360
+  _viewAngle: 70
   _targetMask:
     serializedVersion: 2
     m_Bits: 8
