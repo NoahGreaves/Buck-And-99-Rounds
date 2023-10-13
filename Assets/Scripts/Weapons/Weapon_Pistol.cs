@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Weapon_Pistol : Weapon
 {
+    [SerializeField] private Transform _projectileSpawnPoint;
+
     private void Awake()
     {
         WEAPONTYPE = WeaponType.GUN_PISTOL;
@@ -22,7 +24,7 @@ public class Weapon_Pistol : Weapon
     protected override void Fire(Vector3 weaponDirection)
     {
         base.Fire(weaponDirection);
-        var bullet = Instantiate(bulletPrefab, transform.position, bulletPrefab.transform.rotation);
+        var bullet = Instantiate(bulletPrefab, _projectileSpawnPoint.position, bulletPrefab.transform.rotation);
         bullet.transform.forward = weaponDirection;
         bullet.StartCountdown();
     }

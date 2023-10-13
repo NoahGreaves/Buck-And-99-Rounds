@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using UnityEngine.AI;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -20,8 +21,10 @@ public class Enemy : MonoBehaviour
     private List<Transform> _decoyList = new List<Transform>();
     protected Transform targetPlayer;
 
-    protected GameObject PlayerTarget;
+    protected GameObject playerTarget;
     protected bool isLookingAtTarget = false;
+
+    protected NavMeshAgent agent;
 
     public static float SetMoveSpeed(float speed) => MovementSpeed = speed;
     public static float ResetMoveSpeed(float speed) => MovementSpeed = speed;
@@ -48,7 +51,7 @@ public class Enemy : MonoBehaviour
         if (priorityTarget == null)
             return;
 
-        PlayerTarget = priorityTarget.gameObject;
+        playerTarget = priorityTarget.gameObject;
         RotateToLookAt(priorityTarget);
     }
 

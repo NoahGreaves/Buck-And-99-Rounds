@@ -32,7 +32,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0.634}
   m_LocalScale: {x: 0.52246, y: 0.5275, z: 2.1715786}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 4582575884618445476}
   m_Father: {fileID: 23902918649757272}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2914731509022515784
@@ -120,7 +121,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Enemy Test Shitter
   bulletPrefab: {fileID: 4197093204152126896, guid: 5429c7d5d3939164daf776f2d9edfc6d, type: 3}
-  cooldown: 1.5
+  cooldown: 0.2
+  _projectileSpawnPoint: {fileID: 4582575884618445476}
 --- !u!1 &4930657989855988246
 GameObject:
   m_ObjectHideFlags: 0
@@ -136,6 +138,7 @@ GameObject:
   - component: {fileID: 6575159010373835947}
   - component: {fileID: 4653006607034556585}
   - component: {fileID: 7885859380633565573}
+  - component: {fileID: 8201703115679807869}
   m_Layer: 6
   m_Name: Enemy_Basic
   m_TagString: Untagged
@@ -251,8 +254,9 @@ MonoBehaviour:
   _rotationSpeed: 5
   Health: 100
   _currentWeapon: {fileID: 7594881126795674722}
-  _movementSpeed: 25
-  _points: []
+  _points:
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &4653006607034556585
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -266,13 +270,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _viewRadius: 16
-  _viewAngle: 70
+  _viewAngle: 360
   _targetMask:
     serializedVersion: 2
     m_Bits: 8
   _obstacleMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
 --- !u!136 &7885859380633565573
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -296,3 +300,56 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!195 &8201703115679807869
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4930657989855988246}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.50000006
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 1
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
+--- !u!1 &7466685300243903162
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4582575884618445476}
+  m_Layer: 0
+  m_Name: ProjectileSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4582575884618445476
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7466685300243903162}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3160036522843240070}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

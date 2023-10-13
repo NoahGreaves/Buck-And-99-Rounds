@@ -1,28 +1,28 @@
 using UnityEngine.AI;
 using UnityEngine;
+using System.Collections;
 
 public class Enemy_Basic : Enemy
 {
     [SerializeField] protected Weapon_Pistol _currentWeapon;
 
     [Header("Movement")]
-    [SerializeField] private float _movementSpeed = 25f;
+    //[SerializeField] private float _movementSpeed = 25f;
     [SerializeField] private Transform[] _points;
     private int destPoint = 0;
 
-    private NavMeshAgent _agent;
     private Transform _currentDestination;
 
     private void Awake()
     {
-        _agent = gameObject.GetComponent<NavMeshAgent>();
-        _agent.autoBraking = false; // stops pausing between destination points
+        agent = gameObject.GetComponent<NavMeshAgent>();
+        agent.autoBraking = false; // stops pausing between destination points
     }
 
     protected override void Start()
     {
         base.Start();
-        _agent.destination = _points[0].position; // Set Agent's initial destination as the first index of the array
+        agent.destination = _points[0].position; // Set Agent's initial destination as the first index of the array
     }
 
     protected override void Update()
@@ -42,21 +42,20 @@ public class Enemy_Basic : Enemy
     {
         base.Move();
 
-        //_agent.SetDestination();
-        if (!_agent.pathPending && _agent.remainingDistance < 0.5f)
+        if (!agent.pathPending && agent.remainingDistance < 0.5f)
             ChangeDestination();
 
     }
 
-    private void ChangeDestination() 
+    private void ChangeDestination()
     {
         if (_points.Length == 0)
             return;
 
-        _agent.destination = _points[destPoint].position;
 
         // Choose the next point in the array as the destination, cycling to the start if necessary.
         destPoint = (destPoint + 1) % _points.Length;
+        agent.destination = _points[destPoint].position;
     }
 
     // Make sure enemy is facing a Target before shooting
@@ -70,13 +69,13 @@ public class Enemy_Basic : Enemy
         bool aimedAtTarget = Physics.Raycast(transform.position, transform.forward, out hit, fov.GetViewRadius, fov.GetTargetMask);
         if (!aimedAtTarget)
             return false;
-        bool aimedAtCorrectTarget = hit.transform.gameObject == PlayerTarget;
+        bool aimedAtCorrectTarget = hit.transform.gameObject == playerTarget;
         bool canShoot = aimedAtTarget && aimedAtCorrectTarget;
 
         // REFACTOR --> MAKE THE ENEMY STOP MOVING AND SHOOT THE PLAYER, MAKE THE ENEMY CHASE PLAYER IF PLAYER LEAVE FOV RADIUS?
         if (canShoot)
         {
-            _agent.isStopped = true;
+            agent.isStopped = true;
         }
 
         return canShoot;

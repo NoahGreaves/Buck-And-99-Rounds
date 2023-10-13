@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class Player 
 {
-    public static float MovementSpeed = 100;
+    public static float MovementSpeed = 10;
     private static float _defaultMovementSpeed = 100; // read from json ?
 
     public static float SetMoveSpeed(float speed) => MovementSpeed = speed;
