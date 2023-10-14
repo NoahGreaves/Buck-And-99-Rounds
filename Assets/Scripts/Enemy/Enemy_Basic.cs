@@ -9,6 +9,8 @@ public class Enemy_Basic : Enemy
     [Header("Movement")]
     //[SerializeField] private float _movementSpeed = 25f;
     [SerializeField] private Transform[] _points;
+    [SerializeField] private float _targetDistanceThreshold = 0.5f;
+
     private int destPoint = 0;
 
     private Transform _currentDestination;
@@ -32,7 +34,7 @@ public class Enemy_Basic : Enemy
 
         bool shootWeapon = CheckToShootWeapon();
         Debug.Log(shootWeapon);
-        if (shootWeapon && !_currentWeapon.IsOnCooldown)
+        if (_currentWeapon != null && !_currentWeapon.IsOnCooldown && shootWeapon)
         {
             _currentWeapon.ShootWeapon();
         }
@@ -42,7 +44,7 @@ public class Enemy_Basic : Enemy
     {
         base.Move();
 
-        if (!agent.pathPending && agent.remainingDistance < 0.5f)
+        if (!agent.pathPending && agent.remainingDistance < _targetDistanceThreshold)
             ChangeDestination();
 
     }
@@ -62,22 +64,22 @@ public class Enemy_Basic : Enemy
     // If NO target is available in range, DON'T SHOOT
     protected override bool CheckToShootWeapon()
     {
-        base.CheckToShootWeapon();
+        return base.CheckToShootWeapon();
 
-        // Raycast forward, if cast collides with Player/Decoy return true
-        RaycastHit hit;
-        bool aimedAtTarget = Physics.Raycast(transform.position, transform.forward, out hit, fov.GetViewRadius, fov.GetTargetMask);
-        if (!aimedAtTarget)
-            return false;
-        bool aimedAtCorrectTarget = hit.transform.gameObject == playerTarget;
-        bool canShoot = aimedAtTarget && aimedAtCorrectTarget;
+        //// Raycast forward, if cast collides with Player/Decoy return true
+        //RaycastHit hit;
+        //bool aimedAtTarget = Physics.Raycast(transform.position, transform.forward, out hit, fov.GetViewRadius, fov.GetTargetMask);
+        //if (!aimedAtTarget)
+        //    return false;
+        //bool aimedAtCorrectTarget = hit.transform.gameObject == playerTarget;
+        //bool canShoot = aimedAtTarget && aimedAtCorrectTarget;
 
-        // REFACTOR --> MAKE THE ENEMY STOP MOVING AND SHOOT THE PLAYER, MAKE THE ENEMY CHASE PLAYER IF PLAYER LEAVE FOV RADIUS?
-        if (canShoot)
-        {
-            agent.isStopped = true;
-        }
+        //// REFACTOR --> MAKE THE ENEMY STOP MOVING AND SHOOT THE PLAYER, MAKE THE ENEMY CHASE PLAYER IF PLAYER LEAVE FOV RADIUS?
+        //if (canShoot)
+        //{
+        //    agent.isStopped = true;
+        //}
 
-        return canShoot;
+        //return canShoot;
     }
 }

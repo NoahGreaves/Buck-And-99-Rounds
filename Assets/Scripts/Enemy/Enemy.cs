@@ -35,6 +35,7 @@ public class Enemy : MonoBehaviour
     protected virtual void Start()
     {
         fov = GetComponent<FieldOfView>();
+        Cursor.lockState = CursorLockMode.Locked;         
     }
 
     protected virtual void Update()
@@ -70,7 +71,8 @@ public class Enemy : MonoBehaviour
     {
         for (int i = 0; i < targets.Count; i++)
         {
-            PlayerTypeObject pto = targets[i].gameObject.GetComponent<PlayerTypeObject>();
+            PlayerTypeObject pto = targets[i].GetComponent<PlayerTypeObject>();
+            print($"{pto.gameObject.name}");
             PlayerType possiblePlayer = pto ? pto.PLAYERTYPE : PlayerType.NULL;
             switch (possiblePlayer)
             {
@@ -99,10 +101,33 @@ public class Enemy : MonoBehaviour
 
     protected virtual bool CheckToShootWeapon()
     {
-        return false;
+
+        // Raycast forward, if cast collides with Player/Decoy return true
+        RaycastHit hit;
+        bool aimedAtTarget = Physics.Raycast(transform.position, transform.forward, out hit, fov.GetViewRadius, fov.GetTargetMask);
+        if (!aimedAtTarget)
+            return false;
+        bool aimedAtCorrectTarget = hit.transform.gameObject == playerTarget;
+        bool canShoot = aimedAtTarget && aimedAtCorrectTarget;
+
+        // REFACTOR --> MAKE THE ENEMY STOP MOVING AND SHOOT THE PLAYER, MAKE THE ENEMY CHASE PLAYER IF PLAYER LEAVE FOV RADIUS?
+        if (canShoot)
+        {
+            agent.isStopped = true;
+        }
+
+        return canShoot;
+
+
+
+
+        //return false;
     }
 
-    public void OnProjectileCollision(Projectile projectile){ }
+    public void OnProjectileCollision(Projectile projectile)
+    {
+    
+    }
 
     protected virtual void ShootWeapon() { }
 
