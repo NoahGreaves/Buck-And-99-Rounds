@@ -72,7 +72,7 @@ public class Enemy : MonoBehaviour
         for (int i = 0; i < targets.Count; i++)
         {
             PlayerTypeObject pto = targets[i].GetComponent<PlayerTypeObject>();
-            print($"{pto.gameObject.name}");
+            //print($"{pto.PLAYERTYPE}");
             PlayerType possiblePlayer = pto ? pto.PLAYERTYPE : PlayerType.NULL;
             switch (possiblePlayer)
             {
