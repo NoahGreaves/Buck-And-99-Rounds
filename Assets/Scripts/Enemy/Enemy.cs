@@ -12,7 +12,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] protected float _rotationSpeed = 2f;
 
     protected static float MovementSpeed = 100;
-    protected const float MINDISTANCE = 0.2f;
+    protected const float MIN_DISTANCE = 0.2f;
     private static float _defaultMovementSpeed = 100;
 
     [SerializeField] protected float Health = 100;
@@ -117,11 +117,6 @@ public class Enemy : MonoBehaviour
         }
 
         return canShoot;
-
-
-
-
-        //return false;
     }
 
     public void OnProjectileCollision(Projectile projectile)

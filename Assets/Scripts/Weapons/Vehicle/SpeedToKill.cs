@@ -4,17 +4,11 @@ public class SpeedToKill : MonoBehaviour
 {
     [SerializeField] private float _damage = 50f;
 
-    private PlayerMovement _playerMovement;
     private const int PLAYER_LAYER = 1 << 3;
-
-    private void Start()
-    {
-        _playerMovement = transform.parent.GetComponent<PlayerMovement>();
-    }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (!_playerMovement.CanPlayerSpeedKill && collision.gameObject.layer == PLAYER_LAYER)
+        if (!Player.CanSpeedKill && collision.gameObject.layer == PLAYER_LAYER)
             return;
 
         DealDamage(collision.gameObject);

@@ -10,11 +10,6 @@ public enum WheelDriveType
 
 public class PlayerMovement : MonoBehaviour
 {
-    // Camera
-    [Header("Camera")]
-    [SerializeField] private Transform _cameraFollowTarget;
-    [SerializeField] private float _cameraSensitivity = 0.25f;
-
     // Vehicle Values
     [Space(10)]
     [Header("Vehicle Movement")]
@@ -47,16 +42,12 @@ public class PlayerMovement : MonoBehaviour
 
     private Rigidbody _RB;
 
-    private Vector2 _lookInput;
     private Vector2 _moveInput;
-
-    private Vector3 _playerVelocity;
 
     private LayerMask _groundMask = 1 << 9;
     private bool _grounded;
     private float _forceMultiplier = 1f; // increase for sprint, and other speed abilities
 
-    private float _gravity = -9.81f;
     private bool _isBreaking = false;
 
     private bool _canPlayerSpeedKill = false;
@@ -70,16 +61,14 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        CameraRotation();
-
-        _canPlayerSpeedKill = CheckPlayerCanKillWithSpeed();
+        CheckPlayerCanKillWithSpeed();
     }
 
     private void FixedUpdate()
     {
         HandleMotor();
         HandleSteering();
-        //UpdateWheels();
+        UpdateWheels();
 
         _grounded = IsGrounded();
     }
@@ -91,15 +80,9 @@ public class PlayerMovement : MonoBehaviour
         _moveInput = context.ReadValue<Vector2>();
     }
 
-    public void OnJump(InputAction.CallbackContext context)
+    public void OnBoost(InputAction.CallbackContext context)
     {
-        Jump();
-    }
-
-    public void OnLook(InputAction.CallbackContext context)
-    {
-        _lookInput = context.ReadValue<Vector2>();
-        CameraRotation();
+        Boost();
     }
 
     public void OnBreak(InputAction.CallbackContext context)
@@ -113,23 +96,15 @@ public class PlayerMovement : MonoBehaviour
     {
         bool rayHitGround = Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), _groundCheckDistance, _groundMask);
         if (rayHitGround)
-        {
-            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.down) * _groundCheckDistance, Color.yellow);
             return true;
-        }
         else
-        {
-            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.down) * _groundCheckDistance, Color.white);
             return false;
-        }
     }
 
-    private bool CheckPlayerCanKillWithSpeed()
+    private void CheckPlayerCanKillWithSpeed()
     {
         bool canPlayerSpeedKill = CheckVelocity(_RB.velocity, _minSpeedToKill);
-        if (canPlayerSpeedKill)
-            return true;
-        return false;
+        Player.CanSpeedKill = canPlayerSpeedKill;
     }
 
     private bool CheckPlayerHitMaxSpeed()
@@ -140,28 +115,24 @@ public class PlayerMovement : MonoBehaviour
         return false;
     }
 
-    private void CameraRotation()
-    {
-        _cameraFollowTarget.transform.rotation *= Quaternion.AngleAxis(_lookInput.x * _cameraSensitivity, Vector3.up);
-    }
 
     private void HandleMotor()
     {
         switch (_wheelDriveType)
         {
             case WheelDriveType.FRONT_WHEEL:
-                _frontLeftWheel.motorTorque  = _moveInput.y * _motorForce;
-                _frontRightWheel.motorTorque = _moveInput.y * _motorForce;
+                _frontLeftWheel.motorTorque  = _moveInput.y * ( _motorForce * _forceMultiplier );
+                _frontRightWheel.motorTorque = _moveInput.y * ( _motorForce * _forceMultiplier );
                 break;
             case WheelDriveType.REAR_WHEEL:
-                _rearLeftWheel.motorTorque  = _moveInput.x * _motorForce;
-                _rearRightWheel.motorTorque = _moveInput.x * _motorForce;
+                _rearLeftWheel.motorTorque  = _moveInput.y * ( _motorForce * _forceMultiplier );
+                _rearRightWheel.motorTorque = _moveInput.y * ( _motorForce * _forceMultiplier );
                 break;
             case WheelDriveType.ALL_WHEEL:
-                _frontLeftWheel.motorTorque  = _moveInput.y * _motorForce;
-                _frontRightWheel.motorTorque = _moveInput.y * _motorForce;
-                _rearLeftWheel.motorTorque   = _moveInput.x * _motorForce;
-                _rearRightWheel.motorTorque  = _moveInput.x * _motorForce;
+                _frontLeftWheel.motorTorque  = _moveInput.y * ( _motorForce * _forceMultiplier );
+                _frontRightWheel.motorTorque = _moveInput.y * ( _motorForce * _forceMultiplier );
+                _rearLeftWheel.motorTorque   = _moveInput.x * ( _motorForce * _forceMultiplier );
+                _rearRightWheel.motorTorque  = _moveInput.x * ( _motorForce * _forceMultiplier );
                 break;
         }
 
@@ -202,13 +173,10 @@ public class PlayerMovement : MonoBehaviour
         wheelTransform.position = pos;
     }
 
-    private void Jump()
+    private void Boost()
     {
-        Debug.Log("player jumped: " + _grounded);
-        if (_grounded)
-        {
-            //_playerVelocity.y = Mathf.Sqrt(_jumpForce * 3f * _gravity);
-        }
+        // fix boost lol
+           _motorForce *= 2;
     }
 
     private bool CheckVelocity(Vector3 playerVelocity, float velocityToCompare)
@@ -216,6 +184,7 @@ public class PlayerMovement : MonoBehaviour
         // Clamp Player Velocity to a Max Speed
         var rbVelocity = playerVelocity;
         var sqrMaxVelocity = velocityToCompare * velocityToCompare;
+
         if (rbVelocity.sqrMagnitude > sqrMaxVelocity)
             return true;
 

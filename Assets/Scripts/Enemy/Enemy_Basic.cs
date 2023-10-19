@@ -7,9 +7,10 @@ public class Enemy_Basic : Enemy
     [SerializeField] protected Weapon_Pistol _currentWeapon;
 
     [Header("Movement")]
-    //[SerializeField] private float _movementSpeed = 25f;
-    [SerializeField] private Transform[] _points;
+    [SerializeField] private float _movementSpeed = 25f;
     [SerializeField] private float _targetDistanceThreshold = 0.5f;
+
+    private Vehicle _playerVehicle;
 
     private int destPoint = 0;
 
@@ -24,7 +25,6 @@ public class Enemy_Basic : Enemy
     protected override void Start()
     {
         base.Start();
-        agent.destination = _points[0].position; // Set Agent's initial destination as the first index of the array
     }
 
     protected override void Update()
@@ -38,11 +38,18 @@ public class Enemy_Basic : Enemy
         {
             _currentWeapon.ShootWeapon();
         }
+
     }
 
     protected override void Move()
     {
         base.Move();
+
+        // Get Player Vehicle and Set the Agents Destination
+        var playerVehicle = Player.CurrentPlayerVehicle;
+        var targetPosition = playerVehicle.transform.position;
+        agent.SetDestination(targetPosition);
+        
 
         if (!agent.pathPending && agent.remainingDistance < _targetDistanceThreshold)
             ChangeDestination();
@@ -51,13 +58,6 @@ public class Enemy_Basic : Enemy
 
     private void ChangeDestination()
     {
-        if (_points.Length == 0)
-            return;
-
-
-        // Choose the next point in the array as the destination, cycling to the start if necessary.
-        destPoint = (destPoint + 1) % _points.Length;
-        agent.destination = _points[destPoint].position;
     }
 
     // Make sure enemy is facing a Target before shooting
