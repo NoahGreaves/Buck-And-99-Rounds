@@ -5,5 +5,6 @@ using UnityEngine;
 public enum WeaponType
 {
     NULL = 0,
-    GUN_PISTOL
+    MELEE,
+    RANGED
 }

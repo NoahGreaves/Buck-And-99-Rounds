@@ -1,76 +1,70 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public enum WheelDriveType
-{
-    FRONT_WHEEL = 0,
-    REAR_WHEEL,
-    ALL_WHEEL
-}
-
 public class PlayerMovement : MonoBehaviour
 {
     // Vehicle Values
-    [Space(10)]
     [Header("Vehicle Movement")]
-    [SerializeField] private WheelDriveType _wheelDriveType = WheelDriveType.FRONT_WHEEL;
-    [SerializeField] private float _motorForce = 1000f;
-    [SerializeField] private float _breakForce = 3000f;
-    [SerializeField] private float _maxSteerAngle = 30f;
+    [SerializeField] private float _moveSpeed = 50f;
+    [SerializeField] private float _turnSpeed = 30f;
+    [SerializeField] private float _groundDrag = 4;
+    [SerializeField] private float _airDrag = 0.1f;
+    [SerializeField] private float _breakForce = 30f;
+    [SerializeField] private float _gravityForce = -20f;
 
     // Thresholds
     [Space(10)]
     [Header("Player Movement Thresholds")]
-    [SerializeField] private float _groundCheckDistance = 1f;
-    [SerializeField] private float _maxMoveVelocity = 50f;
     [SerializeField] private float _minSpeedToKill = 25f;
+    [SerializeField] private float _maxMoveVelocity = 50f;
 
-    // Wheels
-    [Space(10)]
-    [Header("Wheel Visuals")]
-    [SerializeField] private Transform _frontLeftWheelVisual;
-    [SerializeField] private Transform _frontRightWheelVisual;
-    [SerializeField] private Transform _rearLeftWheelVisual;
-    [SerializeField] private Transform _rearRightWheelVisual;
-
-    [Space(10)]
-    [Header("Wheel Colliders")]
-    [SerializeField] private WheelCollider _frontLeftWheel;
-    [SerializeField] private WheelCollider _frontRightWheel;
-    [SerializeField] private WheelCollider _rearLeftWheel;
-    [SerializeField] private WheelCollider _rearRightWheel;
-
+    // Engine Rigidbody -> Gets detached and is controlled while the vehicle art is set to this objects position each frame
     private Rigidbody _RB;
-
+    public Rigidbody VehicleRB { get => _RB; }
     private Vector2 _moveInput;
-
-    private LayerMask _groundMask = 1 << 9;
-    private bool _grounded;
-    private float _forceMultiplier = 1f; // increase for sprint, and other speed abilities
+    private LayerMask _groundMask = 10;
 
     private bool _isBreaking = false;
+    private bool _grounded;
+    private float _groundCheckDistance = 1f;
 
     private bool _canPlayerSpeedKill = false;
     public bool CanPlayerSpeedKill { get => _canPlayerSpeedKill; }
 
     private void Awake()
     {
-        // TODO: MAKE SURE THIS IS THE VEHICLE RIGIDBODY
         _RB = gameObject.GetComponentInChildren<Rigidbody>();
+
+        // detach rb from parent
+        _RB.transform.parent = null;
     }
 
     private void Update()
     {
-        CheckPlayerCanKillWithSpeed();
+        // Set Vehicle Position to be the same as the 'Engine' Rigidbody
+        transform.position = _RB.position;
+
+        // Set Player Rotation Based on Input and Whether the Player is on a ramp or not
+        SetRotation();
+
+        // Check if player hit  max velocity, if true, set to be MaxVelocity
+        CheckAndSetPlayerHitMaxSpeed();
+
+        // Set RB drag if player is falling or on the ground (Ground resistance / Air Resistance) 
+        _RB.drag = _grounded ? _groundDrag : _airDrag;
     }
 
     private void FixedUpdate()
     {
-        HandleMotor();
-        HandleSteering();
-        UpdateWheels();
+        if (_grounded)
+        {
+            // If player is reversing half the player moveSpeed
+            var speed = _moveInput.y < 0 ? _moveSpeed * 0.5f : _moveSpeed;
+            _RB.AddForce((transform.forward * _moveInput.y) * speed, ForceMode.Acceleration);
+        }   
+        else
+            _RB.AddForce(-transform.up * _gravityForce);
 
-        _grounded = IsGrounded();
     }
 
     // Get Player Input
@@ -89,12 +83,29 @@ public class PlayerMovement : MonoBehaviour
     {
         var isBreaking = context.ReadValue<float>();
         _isBreaking = isBreaking == 1;
+
+        // DELETE 
+        SetPlayerSpeed(0f);
     }
     #endregion
 
-    private bool IsGrounded()
+    private void SetRotation()
     {
-        bool rayHitGround = Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), _groundCheckDistance, _groundMask);
+        var isVehicleMoving = CheckVelocity(0);
+
+        // Set Vehicle Rotation only while the player is moving
+        float newRot = isVehicleMoving ? (_moveInput.x * _turnSpeed) * Time.deltaTime : 0f;
+        transform.Rotate(0, newRot, 0, Space.World);
+
+        CheckPlayerCanKillWithSpeed();
+
+        _grounded = IsGrounded(out RaycastHit hit);
+        transform.rotation = Quaternion.FromToRotation(transform.up, hit.normal) * transform.rotation;
+    }
+
+    private bool IsGrounded(out RaycastHit hit)
+    {
+        bool rayHitGround = Physics.Raycast(_RB.transform.position, transform.TransformDirection(Vector3.down) * _groundCheckDistance, out hit, _groundMask);
         if (rayHitGround)
             return true;
         else
@@ -103,91 +114,35 @@ public class PlayerMovement : MonoBehaviour
 
     private void CheckPlayerCanKillWithSpeed()
     {
-        bool canPlayerSpeedKill = CheckVelocity(_RB.velocity, _minSpeedToKill);
+        bool canPlayerSpeedKill = CheckVelocity(_minSpeedToKill);
         Player.CanSpeedKill = canPlayerSpeedKill;
     }
 
-    private bool CheckPlayerHitMaxSpeed()
+    private void CheckAndSetPlayerHitMaxSpeed()
     {
-        bool playerMovingMaxSpeed = CheckVelocity(_RB.velocity, _maxMoveVelocity);
-        if (playerMovingMaxSpeed)
-            return true;
-        return false;
+        bool playerMovingMaxSpeed = CheckVelocity(_maxMoveVelocity);
+        if (!playerMovingMaxSpeed)
+            return;
+
+        SetPlayerSpeed(_maxMoveVelocity);
     }
 
-
-    private void HandleMotor()
+    private void SetPlayerSpeed(float newSpeed)
     {
-        switch (_wheelDriveType)
-        {
-            case WheelDriveType.FRONT_WHEEL:
-                _frontLeftWheel.motorTorque  = _moveInput.y * ( _motorForce * _forceMultiplier );
-                _frontRightWheel.motorTorque = _moveInput.y * ( _motorForce * _forceMultiplier );
-                break;
-            case WheelDriveType.REAR_WHEEL:
-                _rearLeftWheel.motorTorque  = _moveInput.y * ( _motorForce * _forceMultiplier );
-                _rearRightWheel.motorTorque = _moveInput.y * ( _motorForce * _forceMultiplier );
-                break;
-            case WheelDriveType.ALL_WHEEL:
-                _frontLeftWheel.motorTorque  = _moveInput.y * ( _motorForce * _forceMultiplier );
-                _frontRightWheel.motorTorque = _moveInput.y * ( _motorForce * _forceMultiplier );
-                _rearLeftWheel.motorTorque   = _moveInput.x * ( _motorForce * _forceMultiplier );
-                _rearRightWheel.motorTorque  = _moveInput.x * ( _motorForce * _forceMultiplier );
-                break;
-        }
-
-        var currentbreakForce = _isBreaking ? _breakForce : 0f;
-        ApplyBreaking(currentbreakForce);
-    }
-
-    private void ApplyBreaking(float breakForce)
-    {
-        _frontLeftWheel.brakeTorque = breakForce;
-        _frontRightWheel.brakeTorque = breakForce;
-
-        _rearLeftWheel.brakeTorque = breakForce;
-        _rearRightWheel.brakeTorque = breakForce;
-    }
-
-    private void HandleSteering()
-    {
-        var currentSteerAngle = _maxSteerAngle * _moveInput.x;
-        _frontLeftWheel.steerAngle = currentSteerAngle;
-        _frontRightWheel.steerAngle = currentSteerAngle;
-    }
-
-    private void UpdateWheels()
-    {
-        UpdateSingleWheel(_frontLeftWheel, _frontLeftWheelVisual);
-        UpdateSingleWheel(_frontRightWheel, _frontRightWheelVisual);
-        UpdateSingleWheel(_rearLeftWheel, _rearLeftWheelVisual);
-        UpdateSingleWheel(_rearRightWheel, _rearRightWheelVisual);
-    }
-
-    private void UpdateSingleWheel(WheelCollider wheelCollider, Transform wheelTransform)
-    {
-        Vector3 pos;
-        Quaternion rot;
-        wheelCollider.GetWorldPose(out pos, out rot);
-        wheelTransform.rotation = rot;
-        wheelTransform.position = pos;
+        _RB.velocity = _RB.velocity.normalized * newSpeed;
     }
 
     private void Boost()
     {
         // fix boost lol
-           _motorForce *= 2;
+        _moveSpeed *= 2;
     }
 
-    private bool CheckVelocity(Vector3 playerVelocity, float velocityToCompare)
+    private bool CheckVelocity(float velocityToCompare)
     {
-        // Clamp Player Velocity to a Max Speed
-        var rbVelocity = playerVelocity;
         var sqrMaxVelocity = velocityToCompare * velocityToCompare;
-
-        if (rbVelocity.sqrMagnitude > sqrMaxVelocity)
+        if (_RB.velocity.sqrMagnitude > sqrMaxVelocity)
             return true;
-
         return false;
     }
 }

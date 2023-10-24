@@ -12,7 +12,7 @@ public class FollowTarget : MonoBehaviour
     // MAKE A VEHCILE SCRIPT
     [SerializeField] private GameObject _currentVehicle;
 
-    // GET GUN PROGRAMMATICALLY
+    // GET GUN PROGRAMATICALLY
     [SerializeField] private GameObject _currentWeapon;
 
     private Vector2 _lookInput;

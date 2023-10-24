@@ -1,57 +1,76 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
     public string Name = "Test Shitter";
 
-    public virtual WeaponType WEAPONTYPE { get; protected set; }
+    [SerializeField] private bool _weaponIsMelee = false;
 
-    //protected float fireRate = 4f;
-    //protected float reloadSpeed = 10f;
+    [Header("Melee Weapon")]
+    [SerializeField] protected float meleeDamage = 10f;
+    [SerializeField] protected float meleeCooldown = 1.5f;
 
+    [Header("Ranged Weapon")]
     [SerializeField] protected Projectile bulletPrefab;
-    [SerializeField] protected float cooldown = 1.5f; // 1.5 seconds of cooldown between weapon shots/attacks
-
-    private float _cooldownTime;
+    [SerializeField] protected float rangedCooldown = 1.5f; // 1.5 seconds of cooldown between weapon shots/attacks
 
     private bool _isOnCooldown = false;
     public bool IsOnCooldown { get => _isOnCooldown; }
+    public virtual WeaponType WEAPONTYPE { get; protected set; }
 
-    // Called From `PlayerShooting` for Player Controls
-    public virtual void ShootWeapon() 
+    protected void Start()
     {
-        if (this.IsOnCooldown)
+        SetWeaponType();
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (WEAPONTYPE == WeaponType.MELEE)
         {
-            return;
+            var target = collision.gameObject;
+            MeleeAttack(target);
         }
+    }
+
+    public void PlayerWeaponAttack() 
+    {
+        if (IsOnCooldown)
+            return;
         
         Fire(transform.forward);
-        StartCoroutine(Cooldown());
+        StartCoroutine(Cooldown(rangedCooldown));
+    }
+
+    private void SetWeaponType() 
+    {
+        WEAPONTYPE = _weaponIsMelee ? WeaponType.MELEE : WeaponType.RANGED;
     }
     
     protected virtual void Fire(Vector3 weaponDirection) { }
 
-    private void Start()
+    protected virtual void MeleeAttack(GameObject target) 
     {
-        _cooldownTime = cooldown;
+        if (_isOnCooldown && target.layer != Player.LAYER)
+            return;
+
+        var health = target.GetComponent<Health>();
+        health.TakeDamage(meleeDamage);
+        StartCoroutine(Cooldown(meleeCooldown));
     }
 
-    protected virtual IEnumerator Cooldown() 
+    protected virtual IEnumerator Cooldown(float cooldown) 
     {
         _isOnCooldown = true;
 
-        do
+        while (cooldown > 0)
         {
-            _cooldownTime -= Time.deltaTime;
+            cooldown -= Time.deltaTime;
             yield return null;
-
-        } while (_cooldownTime > 0);
+        }
 
         _isOnCooldown = false;
-        _cooldownTime = cooldown;
-        StopCoroutine(Cooldown());
+        StopCoroutine(Cooldown(cooldown));
 
         yield return null;
     }

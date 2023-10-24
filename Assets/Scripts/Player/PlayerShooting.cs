@@ -7,6 +7,6 @@ public class PlayerShooting : MonoBehaviour
 
     public void Fire(InputAction.CallbackContext context)
     {
-        _equippedWeapon.ShootWeapon();
+        _equippedWeapon.PlayerWeaponAttack();
     }
 }

@@ -1,25 +1,18 @@
 using UnityEngine.AI;
 using UnityEngine;
-using System.Collections;
 
 public class Enemy_Basic : Enemy
 {
-    [SerializeField] protected Weapon_Pistol _currentWeapon;
-
     [Header("Movement")]
-    [SerializeField] private float _movementSpeed = 25f;
     [SerializeField] private float _targetDistanceThreshold = 0.5f;
 
-    private Vehicle _playerVehicle;
-
-    private int destPoint = 0;
-
-    private Transform _currentDestination;
+    [Header("Damage")]
+    [SerializeField] protected Weapon _currentWeapon;
+    [SerializeField] private float _damageOnContact = 10f;
 
     private void Awake()
     {
         agent = gameObject.GetComponent<NavMeshAgent>();
-        agent.autoBraking = false; // stops pausing between destination points
     }
 
     protected override void Start()
@@ -33,12 +26,10 @@ public class Enemy_Basic : Enemy
         Move();
 
         bool shootWeapon = CheckToShootWeapon();
-        Debug.Log(shootWeapon);
         if (_currentWeapon != null && !_currentWeapon.IsOnCooldown && shootWeapon)
         {
-            _currentWeapon.ShootWeapon();
+            _currentWeapon.PlayerWeaponAttack();
         }
-
     }
 
     protected override void Move()

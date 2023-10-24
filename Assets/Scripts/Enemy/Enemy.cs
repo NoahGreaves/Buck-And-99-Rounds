@@ -35,7 +35,7 @@ public class Enemy : MonoBehaviour
     protected virtual void Start()
     {
         fov = GetComponent<FieldOfView>();
-        Cursor.lockState = CursorLockMode.Locked;         
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     protected virtual void Update()
@@ -46,14 +46,14 @@ public class Enemy : MonoBehaviour
 
         _decoyList.Clear(); // TODO: SORT DECOY LIST FROM CLOSTEST TO FARTHEST FROM PLAYER
 
-        GetTargets(targets);
-        var priorityTarget = ChoosePriorityTarget();
+    //    GetTargets(targets);
+    //    var priorityTarget = ChoosePriorityTarget();
 
-        if (priorityTarget == null)
-            return;
+    //    if (priorityTarget == null)
+    //        return;
 
-        playerTarget = priorityTarget.gameObject;
-        RotateToLookAt(priorityTarget);
+    //    playerTarget = priorityTarget.gameObject;
+    //    RotateToLookAt(priorityTarget);
     }
 
     protected void RotateToLookAt(Transform lookAtTarget) 

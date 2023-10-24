@@ -8,17 +8,12 @@ public class Weapon_Pistol : Weapon
 
     private void Awake()
     {
-        WEAPONTYPE = WeaponType.GUN_PISTOL;
+        WEAPONTYPE = WeaponType.RANGED;
     }
 
-    public override void ShootWeapon() 
+    protected override IEnumerator Cooldown(float cooldown)
     {
-        base.ShootWeapon();
-    }
-
-    protected override IEnumerator Cooldown()
-    {
-        yield return base.Cooldown();
+        yield return base.Cooldown(cooldown);
     }
 
     protected override void Fire(Vector3 weaponDirection)
