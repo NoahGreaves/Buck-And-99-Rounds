@@ -7,9 +7,10 @@ public delegate void OnPlayerElimination();
 // OBJECTIVES
 public delegate void OnObjectiveComplete(Objective objective);
 public delegate void OnEnemyCountUpdate(int enemyCount);
+public delegate void OnGetObjectives(ObjectiveType objectiveType);
 
-// OTHER
-public delegate void OnGetEnemies(bool isAlive);
+// ENEMIES
+public delegate void OnEnemyKilled(Enemy enemy);
 
 public static class GameEvents
 {
@@ -31,10 +32,11 @@ public static class GameEvents
     public static event OnObjectiveComplete OnObjectiveComplete;
     public static void ObjectiveComplete(Objective objective) => OnObjectiveComplete?.Invoke(objective);
 
+    public static event OnGetObjectives OnGetObjectives;
+    public static void GetObjectives(ObjectiveType objectiveType) => OnGetObjectives?.Invoke(objectiveType);
+
+    // UPDATES THE ENEMY COUNT UI
     public static event OnEnemyCountUpdate OnEnemyCountUpdate;
     public static void EnemyCountUpdate(int enemyCount) => OnEnemyCountUpdate?.Invoke(enemyCount);
     #endregion
-
-    public static event OnGetEnemies OnGetEnemies;
-    public static void GetEnemies(bool isAlive) => OnGetEnemies?.Invoke(isAlive);
 }

@@ -2,25 +2,51 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-
 /// <summary>
 /// Give enemy Objective GameObjects this component, and add objectives to a list in ObjectiveManager
 /// Same can go for any objective with multiple steps i.e: Elimination, Waypoints
 /// </summary>
 public class Objective : MonoBehaviour
 {
-    [SerializeField] private string _name = "";
-    [SerializeField] protected ObjectiveType objectiveType = ObjectiveType.NO_OBJECTIVE;
+    [SerializeField] private ObjectiveType _objectiveType = ObjectiveType.NO_OBJECTIVE;
 
-    public ObjectiveData ObjectiveData = new ObjectiveData();
+    private ObjectiveData _objectiveData;
     private bool _isComplete = false;
 
-
-
-    protected void IsCompleted()
+    private void Awake()
     {
-        _isComplete = true;
+        _objectiveData = new(_objectiveType);
+
+        SubscribeToEvents();
+    }
+
+    private void OnDisable()
+    {
+        UnsubscribeToEvents();
+    }
+
+    private void SubscribeToEvents()
+    {
+        GameEvents.OnGetObjectives += GetObjective;
+    }
+
+    private void UnsubscribeToEvents()
+    {
+        GameEvents.OnGetObjectives -= GetObjective;
+    }
+
+    private void GetObjective(ObjectiveType objectiveType)
+    {
+        if (_objectiveType == objectiveType)
+        {
+            ObjectiveData.CountObjectives(this);
+            return;   
+        }
+    }
+
+    protected void IsCompleted(bool isCompleted)
+    {
+        _objectiveData.IsComplete = isCompleted;
         GameEvents.ObjectiveComplete(this);
     }
 }

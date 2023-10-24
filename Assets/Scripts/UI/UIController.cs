@@ -67,6 +67,7 @@ public class UIController : MonoBehaviour
     // Count Enemies in Current Level
     private void EnemyCountUI(int enemyCount)
     {
+        print(enemyCount);
         _numOfEnemiesRemaining.text = $"{enemyCount}";
     }
 

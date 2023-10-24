@@ -8,6 +8,7 @@ public class Health : MonoBehaviour
     [SerializeField] private float _health = 100;
 
     private bool _isAlive = true;
+    
 
     private float _currentHealth;
     private float CurrentHealth
@@ -19,7 +20,9 @@ public class Health : MonoBehaviour
             GameEvents.PlayerHealthUpdate(_currentHealth);
 
             if (_currentHealth <= 0)
+            { 
                 _isAlive = false;
+            }
         }
     }
 
@@ -27,18 +30,11 @@ public class Health : MonoBehaviour
     {
         if (_isPlayer)
             Player.Health = this;
-        SubscribeToEvents();
     }
 
     private void Start()
     {
         CurrentHealth = _health;
-        GameEvents.GetEnemies(true);
-    }
-
-    private void SubscribeToEvents() 
-    {
-        GameEvents.OnGetEnemies += CountEnemies;
     }
 
     public void TakeDamage(float damage)
@@ -66,15 +62,12 @@ public class Health : MonoBehaviour
 
         _isAlive = false;
         GameEvents.PlayerElimination();
-        GameEvents.GetEnemies(false);
 
         // play death sounds
 
 
         // animation?? 
 
-
-        UnsubscribeToEvents();
 
         // Destroy Object
         Destroy(gameObject);
@@ -90,23 +83,5 @@ public class Health : MonoBehaviour
         GameEvents.PlayerDeath();
 
         // Destroy(gameObject);
-    }
-
-    private void UnsubscribeToEvents()
-    {
-        //GameEvents.OnCountEnemies -= CountEnemies;
-    }
-
-    private void CountEnemies(bool isAlive) 
-    {
-        if (_isPlayer)
-            return;
-
-        // call EnemeyCountUI using the GameEvents. Find a way to get 
-        // the current enemy count from either health, GameEvent, or EliminationObjective
-
-        print(_isPlayer);
-        ObjectiveData.CountObjectives(isAlive);
-        //GameEvents.CountEnemies(isAlive);
     }
 }
