@@ -34,9 +34,6 @@ public class UIController : MonoBehaviour
         GameEvents.OnPlayerElimination += PlayerEliminationUI;
         GameEvents.OnPlayerVelocityUpdate += UpdateVelocityUI;
 
-        // Objective 
-        GameEvents.OnObjectiveComplete += PlayerObjectiveCompleteUI;
-
         GameEvents.OnEnemyCountUpdate += EnemyCountUI;
     }
 
@@ -47,9 +44,6 @@ public class UIController : MonoBehaviour
         GameEvents.OnPlayerHealthUpdate -= UpdateHealthUI;
         GameEvents.OnPlayerElimination -= PlayerEliminationUI;
         GameEvents.OnPlayerVelocityUpdate -= UpdateVelocityUI;
-        
-        // Objective
-        GameEvents.OnObjectiveComplete -= PlayerObjectiveCompleteUI;
 
         GameEvents.OnEnemyCountUpdate -= EnemyCountUI;
     }
@@ -61,7 +55,8 @@ public class UIController : MonoBehaviour
 
     private void UpdateVelocityUI(float newVelocity)
     {
-        _playerVelocity.text = $"{(int)newVelocity}m/s";
+        newVelocity /= 3.6f; // converts from m/s to km/hr
+        _playerVelocity.text = $"{(int)newVelocity}km/hr";
     }
 
     // Count Enemies in Current Level
@@ -69,12 +64,16 @@ public class UIController : MonoBehaviour
     {
         print(enemyCount);
         _numOfEnemiesRemaining.text = $"{enemyCount}";
+
+        PlayerObjectiveCompleteUI();
     }
 
     // Count Total Kill Count for Play Session
     private void PlayerEliminationUI() {}
 
-    private void PlayerObjectiveCompleteUI(Objective objective) { }
+    private void PlayerObjectiveCompleteUI()
+    {
+    }
 
     private void PlayerDeathUI()
     {

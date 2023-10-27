@@ -8,7 +8,7 @@ public class Health : MonoBehaviour
     [SerializeField] private float _health = 100;
 
     private bool _isAlive = true;
-    
+    private Objective _objective;
 
     private float _currentHealth;
     private float CurrentHealth
@@ -29,7 +29,13 @@ public class Health : MonoBehaviour
     private void Awake()
     {
         if (_isPlayer)
+        { 
             Player.Health = this;
+            return;
+        }
+
+        _objective = GetComponent<Objective>();
+
     }
 
     private void Start()
@@ -63,6 +69,7 @@ public class Health : MonoBehaviour
         _isAlive = false;
         GameEvents.PlayerElimination();
 
+        _objective.SetIsCompleted(true);
         // play death sounds
 
 

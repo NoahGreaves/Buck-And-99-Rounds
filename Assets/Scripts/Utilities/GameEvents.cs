@@ -5,7 +5,7 @@ public delegate void OnPlayerDeath();
 public delegate void OnPlayerElimination();
 
 // OBJECTIVES
-public delegate void OnObjectiveComplete(Objective objective);
+public delegate void OnObjectiveComplete();
 public delegate void OnEnemyCountUpdate(int enemyCount);
 public delegate void OnGetObjectives(ObjectiveType objectiveType);
 
@@ -30,7 +30,7 @@ public static class GameEvents
 
     #region OBJECTIVES
     public static event OnObjectiveComplete OnObjectiveComplete;
-    public static void ObjectiveComplete(Objective objective) => OnObjectiveComplete?.Invoke(objective);
+    public static void ObjectiveComplete() => OnObjectiveComplete?.Invoke();
 
     public static event OnGetObjectives OnGetObjectives;
     public static void GetObjectives(ObjectiveType objectiveType) => OnGetObjectives?.Invoke(objectiveType);

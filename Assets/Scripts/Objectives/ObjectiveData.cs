@@ -7,13 +7,6 @@ public class ObjectiveData
     // WHEN ENEMY DIES, REMOVE FROM THE LIST
     private static readonly List<Objective> _eliminationObjectives = new List<Objective>();
 
-    private static int _numOfObjectives = 0;
-    public static int numOfObjectives
-    {
-        private set => _numOfObjectives = value;
-        get => _numOfObjectives;
-    }
-
     private static ObjectiveType _objectiveType;
     public static ObjectiveType ObjectiveType 
     {
@@ -24,14 +17,11 @@ public class ObjectiveData
         }
     }
 
-    private bool _isCompleted = false;
+    private bool _isComplete = false;
     public bool IsComplete
     {
-        get => _isCompleted;
-        set
-        {
-
-        }
+        get => _isComplete;
+        set => _isComplete = value;
     }
 
     // Constructor
@@ -43,18 +33,15 @@ public class ObjectiveData
     // Destructor
     ~ObjectiveData()
     {
-
+        _eliminationObjectives.Clear();
     }
 
-    // toAdd == true at the start of the game to ADD all the objectives together. 
-    // as objectives are acomplete toAdd should be set to false, and the completed
-    // objectes will be removed from the count i.e: Elimination, Waypoints for Racing
-    public static void CountObjectives(Objective objective)
+    public static void CountObjectives(Objective objective, ObjectiveData data)
     {
-        switch (ObjectiveType) 
+        switch (ObjectiveType)
         {
             case ObjectiveType.ELIMINATION:
-                SetEliminationObjectives(objective);
+                SetEliminationObjectives(objective, data);
                 break;
             case ObjectiveType.TIME_ELIMINATION:
                 break;
@@ -65,14 +52,23 @@ public class ObjectiveData
         }
     }
 
-    private static void SetEliminationObjectives(Objective objective)
+    private static void SetEliminationObjectives(Objective objective, ObjectiveData data)
     {
-        // FIND A WAY TO KNOW IF ENEMY IS ALIVE OR DEAD]
-        // IF ALIVE -> ADD TO LIST
-        // IF DEAD  -> REMOVE FROM LIST
+        // if _isCompleted == true, dont add/remove from the list
 
-        //if () { }
-        _eliminationObjectives.Add(objective);
+        if (!data.IsComplete)
+        {
+            _eliminationObjectives.Add(objective);
+        }
+        else
+        {
+            _eliminationObjectives.Remove(objective);
+        }
         GameEvents.EnemyCountUpdate(_eliminationObjectives.Count);
+
+        if (_eliminationObjectives.Count <= 0)
+        {
+            GameEvents.ObjectiveComplete();
+        }
     }
 }

@@ -39,14 +39,15 @@ public class Objective : MonoBehaviour
     {
         if (_objectiveType == objectiveType)
         {
-            ObjectiveData.CountObjectives(this);
+            ObjectiveData.CountObjectives(this, _objectiveData);
             return;   
         }
     }
 
-    protected void IsCompleted(bool isCompleted)
+    public void SetIsCompleted(bool isCompleted)
     {
         _objectiveData.IsComplete = isCompleted;
-        GameEvents.ObjectiveComplete(this);
+
+        ObjectiveData.CountObjectives(this, _objectiveData);
     }
 }
