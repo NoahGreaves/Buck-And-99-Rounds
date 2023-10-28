@@ -12,11 +12,18 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float _breakForce = 30f;
     [SerializeField] private float _gravityForce = -20f;
 
+    // Drifting Variabless
+    [Space(10)]
+    [Header("Drifting")]
+    [SerializeField] private float _driftForce = 50f;
+    [SerializeField] private float _driftTurnMultiplier = 4f;
+    [SerializeField] private bool _applyDriftTurnMultiplier = false;
+
     // Thresholds
     [Space(10)]
     [Header("Player Movement Thresholds")]
-    [SerializeField] private float _minSpeedToKill = 25f;
     [SerializeField] private float _maxMoveVelocity = 50f;
+    [SerializeField] private float _minSpeedToKill = 25f;
 
     // Engine Rigidbody -> Gets detached and is controlled while the vehicle art is set to this objects position each frame
     private Rigidbody _RB;
@@ -24,9 +31,11 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 _moveInput;
     private LayerMask _groundMask = 10;
 
-    private bool _isBreaking = false;
     private bool _grounded;
     private float _groundCheckDistance = 1f;
+
+    private bool _isDrifting = false;
+    private Vector3 _lastVeloctiy;
 
     private bool _canPlayerSpeedKill = false;
     public bool CanPlayerSpeedKill { get => _canPlayerSpeedKill; }
@@ -56,15 +65,42 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_grounded)
+        MovePlayerIfGrounded(_isDrifting);
+        _lastVeloctiy = _RB.velocity;
+    }
+
+    private void MovePlayerIfGrounded(bool isDrifting)
+    {
+        bool hasDriftTurnMultiplied = false;
+        var speed = _moveInput.y < 0 ? _moveSpeed * 0.5f : _moveSpeed;
+
+        if (_grounded && !isDrifting)
         {
             // If player is reversing half the player moveSpeed
-            var speed = _moveInput.y < 0 ? _moveSpeed * 0.5f : _moveSpeed;
             _RB.AddForce((transform.forward * _moveInput.y) * speed, ForceMode.Acceleration);
-        }   
-        else
-            _RB.AddForce(-transform.up * _gravityForce);
+        }
+        else if(_grounded && isDrifting)
+        {
+            // apply force to in the last direction the player was moving as well as the vehicles transform.forward
+            _RB.AddForce(_lastVeloctiy * _driftForce, ForceMode.Force);
+            _RB.AddForce((transform.forward * _moveInput.y) * speed, ForceMode.Acceleration);
 
+            // increase the speed the player vehicle turns at
+            if (_applyDriftTurnMultiplier && !hasDriftTurnMultiplied)
+            {
+                _turnSpeed *= _driftTurnMultiplier;
+                hasDriftTurnMultiplied = true;
+            }
+        }
+        else // if player is in the air, dont apply any force besides gravity
+        { 
+            _RB.AddForce(-transform.up * _gravityForce, ForceMode.Acceleration);
+        }
+
+        if (_applyDriftTurnMultiplier && hasDriftTurnMultiplied)
+        {
+            _turnSpeed /= _driftTurnMultiplier;
+        }
     }
 
     // Get Player Input
@@ -79,13 +115,10 @@ public class PlayerMovement : MonoBehaviour
         Boost();
     }
 
-    public void OnBreak(InputAction.CallbackContext context)
+    public void OnDrift(InputAction.CallbackContext context)
     {
-        var isBreaking = context.ReadValue<float>();
-        _isBreaking = isBreaking == 1;
-
-        // DELETE 
-        SetPlayerSpeed(0f);
+        var isDrifting = context.ReadValue<float>();
+        _isDrifting = isDrifting == 1;
     }
     #endregion
 
@@ -144,5 +177,16 @@ public class PlayerMovement : MonoBehaviour
         if (_RB.velocity.sqrMagnitude > sqrMaxVelocity)
             return true;
         return false;
+    }
+
+    private void OnDrawGizmos()
+    {
+        // DEBUG
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(transform.position, transform.forward * 1000);
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(transform.position, _lastVeloctiy * 1000);
+        //Debug.DrawRay(transform.position, _lastVeloctiy * 1000, Color.yellow);
     }
 }
