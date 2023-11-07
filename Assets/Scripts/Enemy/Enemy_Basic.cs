@@ -25,6 +25,8 @@ public class Enemy_Basic : Enemy
         base.Update();
         Move();
 
+        var x = GetComponent<Rigidbody>().velocity.sqrMagnitude;
+
         bool shootWeapon = CheckToShootWeapon();
         if (_currentWeapon != null && !_currentWeapon.IsOnCooldown && shootWeapon)
         {

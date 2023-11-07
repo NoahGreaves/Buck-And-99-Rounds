@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 8967730544917148699}
   - component: {fileID: 4152340369506783939}
   - component: {fileID: 4430281242120691039}
+  - component: {fileID: 184539811768991910}
   m_Layer: 3
   m_Name: Playground_Car_V3
   m_TagString: Untagged
@@ -256,8 +257,13 @@ MonoBehaviour:
   _airDrag: 0.1
   _breakForce: 3000
   _gravityForce: -20
-  _minSpeedToKill: 25
+  _driftIntensity: 0.5
+  _driftDecay: 0.95
+  _driftFactor: 1
+  _driftTurnMultiplier: 4
+  _applyDriftTurnMultiplier: 0
   _maxMoveVelocity: 50
+  _minSpeedToKill: 25
 --- !u!114 &8967730544917148699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -296,6 +302,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _equippedWeapon: {fileID: 3004630905941596518}
+--- !u!114 &184539811768991910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4207175466035395239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3962a73b4b6ee7f49903fd5f1b267662, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _fuelAmount: 10
+  _usage: 5
+  _playerHealth: {fileID: 350596740485560652}
 --- !u!1 &4403355243409522676
 GameObject:
   m_ObjectHideFlags: 0
@@ -492,6 +513,7 @@ GameObject:
   - component: {fileID: 8694274041885746450}
   - component: {fileID: 8340110775202487940}
   - component: {fileID: 350596740485560652}
+  - component: {fileID: 5932711347662659322}
   m_Layer: 3
   m_Name: Car
   m_TagString: Untagged
@@ -581,7 +603,7 @@ SphereCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
@@ -626,6 +648,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isPlayer: 1
   _health: 100
+--- !u!65 &5932711347662659322
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6670986167571611855}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6708117589362859012
 GameObject:
   m_ObjectHideFlags: 0

@@ -48,7 +48,7 @@ public class Health : MonoBehaviour
         CurrentHealth -= damage;
 
         if (CurrentHealth <= 0)
-            EnemyDeath();
+            Death();
     }
 
     private void RestoreHP(float hpAmount, bool fullHP = false)
@@ -58,7 +58,7 @@ public class Health : MonoBehaviour
     }
 
     // TODO: Implement proper death ( animations, audio, vfx )
-    private void EnemyDeath() 
+    public void Death() 
     {
         if (_isPlayer)
         { 
@@ -67,9 +67,10 @@ public class Health : MonoBehaviour
         }
 
         _isAlive = false;
-        GameEvents.PlayerElimination();
+        GameEvents.PlayerElimination(); // USE THIS TO ADD TO FUEL TO PLAYER WHEN ENEMY IS ELIMINATED
 
         _objective.SetIsCompleted(true);
+
         // play death sounds
 
 

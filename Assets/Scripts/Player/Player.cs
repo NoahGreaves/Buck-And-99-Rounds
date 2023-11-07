@@ -10,6 +10,8 @@ public struct Player
 
     public static bool CanSpeedKill = false;
 
+    public static bool IsMoving = false;
+
     public static Vehicle CurrentPlayerVehicle = null;
 
     ///

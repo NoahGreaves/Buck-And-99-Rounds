@@ -16,6 +16,8 @@ public class UIController : MonoBehaviour
     [Header("Screens")]
     [SerializeField] private GameObject _gameOverScreen;
 
+    private const float METERS_PER_SECOND_TO_KILOMETERS_PER_HOUR = 3.6f;
+
     private void OnEnable()
     {
         SubscribeToEvents();
@@ -55,7 +57,7 @@ public class UIController : MonoBehaviour
 
     private void UpdateVelocityUI(float newVelocity)
     {
-        newVelocity /= 3.6f; // converts from m/s to km/hr
+        newVelocity /= METERS_PER_SECOND_TO_KILOMETERS_PER_HOUR; // converts from m/s to km/hr
         _playerVelocity.text = $"{(int)newVelocity}km/hr";
     }
 
@@ -77,6 +79,6 @@ public class UIController : MonoBehaviour
     private void PlayerDeathUI()
     {
         Time.timeScale = 0f;
-        _gameOverScreen.SetActive(!_gameOverScreen.activeSelf);
+        _gameOverScreen.SetActive(true);
     }
 }

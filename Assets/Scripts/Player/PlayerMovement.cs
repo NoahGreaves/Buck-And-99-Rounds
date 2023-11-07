@@ -15,7 +15,11 @@ public class PlayerMovement : MonoBehaviour
     // Drifting Variabless
     [Space(10)]
     [Header("Drifting")]
-    [SerializeField] private float _driftForce = 50f;
+    [SerializeField, Range(0.0f, 100f)] private float _driftIntensity = 10f;
+    [SerializeField] private float _driftDecay = .95f;
+    [SerializeField] private float _driftFactor = 1f;
+
+    [Space(10)]
     [SerializeField] private float _driftTurnMultiplier = 4f;
     [SerializeField] private bool _applyDriftTurnMultiplier = false;
 
@@ -26,8 +30,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float _minSpeedToKill = 25f;
 
     // Engine Rigidbody -> Gets detached and is controlled while the vehicle art is set to this objects position each frame
-    private Rigidbody _RB;
-    public Rigidbody VehicleRB { get => _RB; }
+    private Rigidbody RB;
+    public Rigidbody VehicleRB { get => RB; }
     private Vector2 _moveInput;
     private LayerMask _groundMask = 10;
 
@@ -40,18 +44,21 @@ public class PlayerMovement : MonoBehaviour
     private bool _canPlayerSpeedKill = false;
     public bool CanPlayerSpeedKill { get => _canPlayerSpeedKill; }
 
+    // DEBUGGING
+    private Vector3 testdriftForce; // used for debugging
+
     private void Awake()
     {
-        _RB = gameObject.GetComponentInChildren<Rigidbody>();
+        RB = gameObject.GetComponentInChildren<Rigidbody>();
 
         // detach rb from parent
-        _RB.transform.parent = null;
+        RB.transform.parent = null;
     }
 
     private void Update()
     {
         // Set Vehicle Position to be the same as the 'Engine' Rigidbody
-        transform.position = _RB.position;
+        transform.position = RB.position;
 
         // Set Player Rotation Based on Input and Whether the Player is on a ramp or not
         SetRotation();
@@ -60,47 +67,53 @@ public class PlayerMovement : MonoBehaviour
         CheckAndSetPlayerHitMaxSpeed();
 
         // Set RB drag if player is falling or on the ground (Ground resistance / Air Resistance) 
-        _RB.drag = _grounded ? _groundDrag : _airDrag;
+        RB.drag = _grounded ? _groundDrag : _airDrag;
     }
 
     private void FixedUpdate()
     {
         MovePlayerIfGrounded(_isDrifting);
-        _lastVeloctiy = _RB.velocity;
+        _lastVeloctiy = RB.velocity;
     }
 
     private void MovePlayerIfGrounded(bool isDrifting)
     {
-        bool hasDriftTurnMultiplied = false;
         var speed = _moveInput.y < 0 ? _moveSpeed * 0.5f : _moveSpeed;
 
-        if (_grounded && !isDrifting)
-        {
-            // If player is reversing half the player moveSpeed
-            _RB.AddForce((transform.forward * _moveInput.y) * speed, ForceMode.Acceleration);
-        }
-        else if(_grounded && isDrifting)
-        {
-            // apply force to in the last direction the player was moving as well as the vehicles transform.forward
-            _RB.AddForce(_lastVeloctiy * _driftForce, ForceMode.Force);
-            _RB.AddForce((transform.forward * _moveInput.y) * speed, ForceMode.Acceleration);
+        Player.IsMoving = CheckVelocity(0);
 
-            // increase the speed the player vehicle turns at
-            if (_applyDriftTurnMultiplier && !hasDriftTurnMultiplied)
-            {
-                _turnSpeed *= _driftTurnMultiplier;
-                hasDriftTurnMultiplied = true;
-            }
-        }
-        else // if player is in the air, dont apply any force besides gravity
-        { 
-            _RB.AddForce(-transform.up * _gravityForce, ForceMode.Acceleration);
+        // Get the input for car movement.
+        float moveInput = _moveInput.y;
+        float turnInput = _moveInput.x;
+
+        // Calculate speed and torque.
+        float currentSpeed = isDrifting ? speed / _driftIntensity : _moveSpeed;
+
+        // Apply forces to simulate car movement.
+        Vector3 moveForce = currentSpeed * moveInput * transform.forward;
+        RB.AddForce(moveForce, ForceMode.Acceleration);
+
+        // Apply drifting force when drifting is enabled.
+        if (!isDrifting)
+        {
+            // Reduce drift factor over time if not drifting.
+            _driftFactor = Mathf.Lerp(_driftFactor, 1f, Time.deltaTime * _driftDecay);
+            return;
         }
 
-        if (_applyDriftTurnMultiplier && hasDriftTurnMultiplied)
-        {
-            _turnSpeed /= _driftTurnMultiplier;
-        }
+        // Apply the player drift
+        float angle = Vector3.Angle(_lastVeloctiy, transform.right);
+        _driftFactor = Mathf.Lerp(_driftFactor, _driftIntensity, _driftDecay * Time.deltaTime);
+
+        Quaternion myRotation = Quaternion.AngleAxis(angle, Vector3.up);
+        Vector3 startingDirection = transform.right * _moveInput.x;
+        Vector3 result = myRotation * startingDirection;
+
+
+        Vector3 driftForce = _driftFactor * currentSpeed * (turnInput * result);
+        testdriftForce = driftForce;
+
+        RB.AddForce(driftForce);
     }
 
     // Get Player Input
@@ -138,7 +151,7 @@ public class PlayerMovement : MonoBehaviour
 
     private bool IsGrounded(out RaycastHit hit)
     {
-        bool rayHitGround = Physics.Raycast(_RB.transform.position, transform.TransformDirection(Vector3.down) * _groundCheckDistance, out hit, _groundMask);
+        bool rayHitGround = Physics.Raycast(RB.transform.position, transform.TransformDirection(Vector3.down) * _groundCheckDistance, out hit, _groundMask);
         if (rayHitGround)
             return true;
         else
@@ -162,7 +175,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void SetPlayerSpeed(float newSpeed)
     {
-        _RB.velocity = _RB.velocity.normalized * newSpeed;
+        RB.velocity = RB.velocity.normalized * newSpeed;
     }
 
     private void Boost()
@@ -174,7 +187,7 @@ public class PlayerMovement : MonoBehaviour
     private bool CheckVelocity(float velocityToCompare)
     {
         var sqrMaxVelocity = velocityToCompare * velocityToCompare;
-        if (_RB.velocity.sqrMagnitude > sqrMaxVelocity)
+        if (RB.velocity.sqrMagnitude > sqrMaxVelocity)
             return true;
         return false;
     }
@@ -187,6 +200,7 @@ public class PlayerMovement : MonoBehaviour
 
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(transform.position, _lastVeloctiy * 1000);
-        //Debug.DrawRay(transform.position, _lastVeloctiy * 1000, Color.yellow);
+
+        Debug.DrawRay(transform.position, testdriftForce * 1000, Color.red);
     }
 }
