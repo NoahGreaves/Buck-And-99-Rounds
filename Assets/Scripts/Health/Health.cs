@@ -6,6 +6,7 @@ public class Health : MonoBehaviour
 {
     [SerializeField] private bool _isPlayer = false;
     [SerializeField] private float _health = 100;
+    [SerializeField] private float _fuelAmount = 10f;
 
     private bool _isAlive = true;
     private Objective _objective;
@@ -67,7 +68,8 @@ public class Health : MonoBehaviour
         }
 
         _isAlive = false;
-        GameEvents.PlayerElimination(); // USE THIS TO ADD TO FUEL TO PLAYER WHEN ENEMY IS ELIMINATED
+        GameEvents.PlayerElimination();
+        GameEvents.AddPlayerFuel(_fuelAmount);
 
         _objective.SetIsCompleted(true);
 

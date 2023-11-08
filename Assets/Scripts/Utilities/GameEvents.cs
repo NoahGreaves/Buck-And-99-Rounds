@@ -3,6 +3,7 @@ public delegate void OnPlayerHealthUpdate(float newHealth);
 public delegate void OnPlayerVelocityUpdate(float newVelocity);
 public delegate void OnPlayerDeath();
 public delegate void OnPlayerElimination();
+public delegate void OnPlayerGivenFuel(float fuelAmount);
 
 // OBJECTIVES
 public delegate void OnObjectiveComplete();
@@ -26,6 +27,9 @@ public static class GameEvents
 
     public static event OnPlayerElimination OnPlayerElimination;
     public static void PlayerElimination() => OnPlayerElimination?.Invoke();
+
+    public static event OnPlayerGivenFuel OnPlayerGivenFuel;
+    public static void AddPlayerFuel(float fuelAmount) => OnPlayerGivenFuel?.Invoke(fuelAmount);
     #endregion
 
     #region OBJECTIVES

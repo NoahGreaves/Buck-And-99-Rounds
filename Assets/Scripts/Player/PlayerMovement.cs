@@ -9,19 +9,13 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float _turnSpeed = 30f;
     [SerializeField] private float _groundDrag = 4;
     [SerializeField] private float _airDrag = 0.1f;
-    [SerializeField] private float _breakForce = 30f;
-    [SerializeField] private float _gravityForce = -20f;
 
     // Drifting Variabless
     [Space(10)]
     [Header("Drifting")]
-    [SerializeField, Range(0.0f, 100f)] private float _driftIntensity = 10f;
+    [SerializeField] private float _driftIntensity = 5;
     [SerializeField] private float _driftDecay = .95f;
     [SerializeField] private float _driftFactor = 1f;
-
-    [Space(10)]
-    [SerializeField] private float _driftTurnMultiplier = 4f;
-    [SerializeField] private bool _applyDriftTurnMultiplier = false;
 
     // Thresholds
     [Space(10)]
@@ -63,8 +57,8 @@ public class PlayerMovement : MonoBehaviour
         // Set Player Rotation Based on Input and Whether the Player is on a ramp or not
         SetRotation();
 
-        // Check if player hit  max velocity, if true, set to be MaxVelocity
-        CheckAndSetPlayerHitMaxSpeed();
+        // Check if the player is moving fast enough to eliminate an enemy
+        CheckPlayerCanKillWithSpeed();
 
         // Set RB drag if player is falling or on the ground (Ground resistance / Air Resistance) 
         RB.drag = _grounded ? _groundDrag : _airDrag;
@@ -72,48 +66,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        MovePlayerIfGrounded(_isDrifting);
+        MovePlayer();
         _lastVeloctiy = RB.velocity;
-    }
-
-    private void MovePlayerIfGrounded(bool isDrifting)
-    {
-        var speed = _moveInput.y < 0 ? _moveSpeed * 0.5f : _moveSpeed;
-
-        Player.IsMoving = CheckVelocity(0);
-
-        // Get the input for car movement.
-        float moveInput = _moveInput.y;
-        float turnInput = _moveInput.x;
-
-        // Calculate speed and torque.
-        float currentSpeed = isDrifting ? speed / _driftIntensity : _moveSpeed;
-
-        // Apply forces to simulate car movement.
-        Vector3 moveForce = currentSpeed * moveInput * transform.forward;
-        RB.AddForce(moveForce, ForceMode.Acceleration);
-
-        // Apply drifting force when drifting is enabled.
-        if (!isDrifting)
-        {
-            // Reduce drift factor over time if not drifting.
-            _driftFactor = Mathf.Lerp(_driftFactor, 1f, Time.deltaTime * _driftDecay);
-            return;
-        }
-
-        // Apply the player drift
-        float angle = Vector3.Angle(_lastVeloctiy, transform.right);
-        _driftFactor = Mathf.Lerp(_driftFactor, _driftIntensity, _driftDecay * Time.deltaTime);
-
-        Quaternion myRotation = Quaternion.AngleAxis(angle, Vector3.up);
-        Vector3 startingDirection = transform.right * _moveInput.x;
-        Vector3 result = myRotation * startingDirection;
-
-
-        Vector3 driftForce = _driftFactor * currentSpeed * (turnInput * result);
-        testdriftForce = driftForce;
-
-        RB.AddForce(driftForce);
     }
 
     // Get Player Input
@@ -135,15 +89,56 @@ public class PlayerMovement : MonoBehaviour
     }
     #endregion
 
+    private void MovePlayer()
+    {
+        var speed = _moveInput.y < 0 ? _moveSpeed * 0.5f : _moveSpeed;
+
+        Player.IsMoving = CheckVelocity(0);
+
+        // Get the input for car movement.
+        float moveInput = _moveInput.y;
+
+        // Calculate speed and torque.
+        float currentSpeed = _isDrifting ? speed / _driftIntensity : speed;
+
+        // Apply forces to simulate car movement.
+        Vector3 moveForce = currentSpeed * moveInput * transform.forward;
+        RB.AddForce(moveForce, ForceMode.Acceleration);
+
+        Drift(currentSpeed);
+    }
+
+    private void Drift(float currentSpeed) 
+    {
+        float turnInput = _moveInput.x;
+
+        // Apply drifting force when drifting is enabled.
+        if (!_isDrifting)
+        {
+            // Reduce drift factor over time if not drifting.
+            _driftFactor = Mathf.Lerp(_driftFactor, 1f, Time.deltaTime * _driftDecay);
+            return;
+        }
+
+        // Apply the player drift
+        float angle = Vector3.Angle(_lastVeloctiy, transform.right);
+        _driftFactor = Mathf.Lerp(_driftFactor, _driftIntensity, _driftDecay * Time.deltaTime);
+
+        Quaternion myRotation = Quaternion.AngleAxis(angle, Vector3.up);
+        Vector3 startingDirection = transform.right * _moveInput.x;
+        Vector3 result = myRotation * startingDirection;
+
+        Vector3 driftForce = _driftFactor * currentSpeed * (turnInput * result);
+        testdriftForce = driftForce;
+
+        RB.AddForce(driftForce, ForceMode.Acceleration);
+    }
+
     private void SetRotation()
     {
-        var isVehicleMoving = CheckVelocity(0);
-
         // Set Vehicle Rotation only while the player is moving
-        float newRot = isVehicleMoving ? (_moveInput.x * _turnSpeed) * Time.deltaTime : 0f;
+        float newRot = Player.IsMoving ? (_moveInput.x * _turnSpeed) * Time.deltaTime : 0f;
         transform.Rotate(0, newRot, 0, Space.World);
-
-        CheckPlayerCanKillWithSpeed();
 
         _grounded = IsGrounded(out RaycastHit hit);
         transform.rotation = Quaternion.FromToRotation(transform.up, hit.normal) * transform.rotation;
@@ -162,6 +157,7 @@ public class PlayerMovement : MonoBehaviour
     {
         bool canPlayerSpeedKill = CheckVelocity(_minSpeedToKill);
         Player.CanSpeedKill = canPlayerSpeedKill;
+        print(Player.CanSpeedKill);
     }
 
     private void CheckAndSetPlayerHitMaxSpeed()

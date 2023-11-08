@@ -6,7 +6,7 @@ public class SpeedToKill : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (!Player.CanSpeedKill && collision.gameObject.layer == Player.LAYER)
+        if (!Player.CanSpeedKill || collision.gameObject.layer == Player.LAYER)
             return;
 
         DealDamage(collision.gameObject);

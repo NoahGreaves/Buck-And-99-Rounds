@@ -7,7 +7,17 @@ public class Fuel : MonoBehaviour
     [SerializeField] private Health _playerHealth;
      
     private float _currentFuelAmount;
-    private bool _useFuel = true;
+    private bool _useFuel = true; // use for infinte fuel pick-up
+
+    private void OnEnable()
+    {
+        GameEvents.OnPlayerGivenFuel += AddFuel;
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.OnPlayerGivenFuel -= AddFuel;
+    }
 
     private void Start()
     {
@@ -34,8 +44,6 @@ public class Fuel : MonoBehaviour
 
     public void AddFuel(float fuelAmount)
     {
-        _useFuel = false;
         _currentFuelAmount += fuelAmount;
-        _useFuel = true;
     }
 }
