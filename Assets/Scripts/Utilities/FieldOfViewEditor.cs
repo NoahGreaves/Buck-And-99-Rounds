@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(FieldOfView))]
 public class FieldOfViewEditor : Editor
 {
@@ -16,11 +17,12 @@ public class FieldOfViewEditor : Editor
 
 		Handles.DrawLine(fow.transform.position, fow.transform.position + viewAngleA * fow.GetViewRadius);
 		Handles.DrawLine(fow.transform.position, fow.transform.position + viewAngleB * fow.GetViewRadius);
-		
+
 		Handles.color = Color.red;
-		foreach (Transform visibleTarget in fow.GetVisibleTargets)
+		foreach (Transform visibleTarget in fow.VisibleTargets)
 		{
 			Handles.DrawLine(fow.transform.position, visibleTarget.position);
 		}
 	}
 }
+#endif

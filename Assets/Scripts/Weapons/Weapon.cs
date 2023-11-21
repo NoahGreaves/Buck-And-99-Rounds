@@ -38,7 +38,7 @@ public class Weapon : MonoBehaviour
         if (IsOnCooldown)
             return;
         
-        Fire(transform.forward);
+        Fire();
         StartCoroutine(Cooldown(rangedCooldown));
     }
 
@@ -47,7 +47,7 @@ public class Weapon : MonoBehaviour
         WEAPONTYPE = _weaponIsMelee ? WeaponType.MELEE : WeaponType.RANGED;
     }
     
-    protected virtual void Fire(Vector3 weaponDirection) { }
+    protected virtual void Fire() { }
 
     protected virtual void MeleeAttack(GameObject target) 
     {
@@ -55,7 +55,11 @@ public class Weapon : MonoBehaviour
             return;
 
         var health = target.GetComponent<Health>();
-        health.TakeDamage(meleeDamage);
+        if (health != null)
+        {
+            print(health.gameObject.name);
+            health.TakeDamage(meleeDamage);
+        }
         StartCoroutine(Cooldown(meleeCooldown));
     }
 

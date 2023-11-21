@@ -3,6 +3,12 @@ using UnityEngine;
 public class SpeedToKill : MonoBehaviour
 {
     [SerializeField] private float _damage = 50f;
+    private float _originalDamage;
+
+    private void Start()
+    {
+        _originalDamage = _damage;
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -24,5 +30,10 @@ public class SpeedToKill : MonoBehaviour
     public void ChangeDamage(float newDmg) 
     {
         _damage = newDmg;
+    }
+
+    private void ResetDamage() 
+    {
+        _damage = _originalDamage;
     }
 }

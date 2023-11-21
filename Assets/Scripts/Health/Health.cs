@@ -18,12 +18,11 @@ public class Health : MonoBehaviour
         set
         {
             _currentHealth = value;
-            GameEvents.PlayerHealthUpdate(_currentHealth);
+            if (_isPlayer)
+                GameEvents.PlayerHealthUpdate(_currentHealth);
 
             if (_currentHealth <= 0)
-            { 
                 _isAlive = false;
-            }
         }
     }
 
@@ -47,7 +46,6 @@ public class Health : MonoBehaviour
     public void TakeDamage(float damage)
     {
         CurrentHealth -= damage;
-
         if (CurrentHealth <= 0)
             Death();
     }
@@ -69,6 +67,8 @@ public class Health : MonoBehaviour
 
         _isAlive = false;
         GameEvents.PlayerElimination();
+
+        // Give player fuel on kill
         GameEvents.AddPlayerFuel(_fuelAmount);
 
         _objective.SetIsCompleted(true);

@@ -18,11 +18,6 @@ public class FollowTarget : MonoBehaviour
     private Vector2 _lookInput;
     public void OnLook(InputAction.CallbackContext context) => _lookInput = context.ReadValue<Vector2>();
 
-    private void Start()
-    {
-        Cursor.visible = false;
-    }
-
     private void Update()
     {
         CameraRotation();

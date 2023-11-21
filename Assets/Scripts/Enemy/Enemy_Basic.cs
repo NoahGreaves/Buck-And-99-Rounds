@@ -25,8 +25,6 @@ public class Enemy_Basic : Enemy
         base.Update();
         Move();
 
-        var x = GetComponent<Rigidbody>().velocity.sqrMagnitude;
-
         bool shootWeapon = CheckToShootWeapon();
         if (_currentWeapon != null && !_currentWeapon.IsOnCooldown && shootWeapon)
         {
@@ -38,15 +36,18 @@ public class Enemy_Basic : Enemy
     {
         base.Move();
 
-        // Get Player Vehicle and Set the Agents Destination
-        var playerVehicle = Player.CurrentPlayerVehicle;
-        var targetPosition = playerVehicle.transform.position;
-        agent.SetDestination(targetPosition);
-        
+        // Get Player Vehicle from FOV and set destination
+        GetTargets(fov.VisibleTargets);
+        if (targetPlayer == null)
+            return;
+        RotateToLookAt(targetPlayer);
 
-        if (!agent.pathPending && agent.remainingDistance < _targetDistanceThreshold)
-            ChangeDestination();
+        agent.SetDestination(targetPlayer.transform.position);
 
+
+        // if enemy is moving between multiple points
+        //if (!agent.pathPending && agent.remainingDistance < _targetDistanceThreshold)
+        //    ChangeDestination();
     }
 
     private void ChangeDestination()

@@ -1,6 +1,7 @@
 // PLAYER
 public delegate void OnPlayerHealthUpdate(float newHealth);
 public delegate void OnPlayerVelocityUpdate(float newVelocity);
+public delegate void OnPlayerFuelUpdate(float newFuelAmount);
 public delegate void OnPlayerDeath();
 public delegate void OnPlayerElimination();
 public delegate void OnPlayerGivenFuel(float fuelAmount);
@@ -21,6 +22,9 @@ public static class GameEvents
 
     public static event OnPlayerVelocityUpdate OnPlayerVelocityUpdate;
     public static void PlayerVelocityUpdate(float newVelocity) => OnPlayerVelocityUpdate?.Invoke(newVelocity);
+
+    public static event OnPlayerFuelUpdate OnPlayerFuelUpdate;
+    public static void PlayerFuelUpdate(float newFuelAmount) => OnPlayerFuelUpdate?.Invoke(newFuelAmount);
 
     public static event OnPlayerDeath OnPlayerDeath;
     public static void PlayerDeath() => OnPlayerDeath?.Invoke();

@@ -18,7 +18,7 @@ public class FieldOfView : MonoBehaviour
     public float GetViewAngle { get { return _viewAngle; } }
     public LayerMask GetTargetMask { get { return _targetMask; } }
 
-    public List<Transform> GetVisibleTargets{ get { return _visbleTargets; } }
+    public List<Transform> VisibleTargets{ get { return _visbleTargets; } }
 
     private void Update()
     {

@@ -131,7 +131,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 0
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 112
   m_CollisionDetection: 2
 --- !u!114 &4197093204152126896
@@ -147,6 +147,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ProjectileType: 0
-  Damage: 50
-  Speed: 1000
+  Damage: 300
+  Speed: 3000
   Lifetime: 3

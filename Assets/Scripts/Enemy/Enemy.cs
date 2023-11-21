@@ -15,9 +15,6 @@ public class Enemy : MonoBehaviour
     protected const float MIN_DISTANCE = 0.2f;
     private static float _defaultMovementSpeed = 100;
 
-    [SerializeField] protected float Health = 100;
-    private static readonly float _defaultHealth = 100;
-
     private List<Transform> _decoyList = new List<Transform>();
     protected Transform targetPlayer;
 
@@ -29,31 +26,20 @@ public class Enemy : MonoBehaviour
     public static float SetMoveSpeed(float speed) => MovementSpeed = speed;
     public static float ResetMoveSpeed(float speed) => MovementSpeed = speed;
 
-    public void ResetHealth() => Health = _defaultHealth;
     public void ResetMovementSpeed() => MovementSpeed = _defaultMovementSpeed;
 
     protected virtual void Start()
     {
         fov = GetComponent<FieldOfView>();
-        Cursor.lockState = CursorLockMode.Locked;
     }
 
     protected virtual void Update()
     {
-        var targets = fov.GetVisibleTargets;
+        var targets = fov.VisibleTargets;
         if (targets.Count == 0)
             return;
 
         _decoyList.Clear(); // TODO: SORT DECOY LIST FROM CLOSTEST TO FARTHEST FROM PLAYER
-
-    //    GetTargets(targets);
-    //    var priorityTarget = ChoosePriorityTarget();
-
-    //    if (priorityTarget == null)
-    //        return;
-
-    //    playerTarget = priorityTarget.gameObject;
-    //    RotateToLookAt(priorityTarget);
     }
 
     protected void RotateToLookAt(Transform lookAtTarget) 
@@ -72,9 +58,12 @@ public class Enemy : MonoBehaviour
         for (int i = 0; i < targets.Count; i++)
         {
             PlayerTypeObject pto = targets[i].GetComponent<PlayerTypeObject>();
-            //print($"{pto.PLAYERTYPE}");
-            PlayerType possiblePlayer = pto ? pto.PLAYERTYPE : PlayerType.NULL;
-            switch (possiblePlayer)
+            if (pto == null)
+            {
+                continue;
+            }
+
+            switch (pto.PLAYERTYPE)
             {
                 case PlayerType.DECOY:
                     _decoyList.Add(targets[i]);
@@ -83,7 +72,7 @@ public class Enemy : MonoBehaviour
                     targetPlayer = targets[i];
                     continue;
                 default:
-                    Debug.LogError("ENEMY.CS -> FOV DETECTS NULL PLAYER");
+                    //Debug.LogError("ENEMY.CS -> FOV DETECTS NULL PLAYER");
                     return;
             }
         }
@@ -101,7 +90,6 @@ public class Enemy : MonoBehaviour
 
     protected virtual bool CheckToShootWeapon()
     {
-
         // Raycast forward, if cast collides with Player/Decoy return true
         RaycastHit hit;
         bool aimedAtTarget = Physics.Raycast(transform.position, transform.forward, out hit, fov.GetViewRadius, fov.GetTargetMask);

@@ -5,7 +5,7 @@ public class Fuel : MonoBehaviour
     [SerializeField] private float _fuelAmount = 100;
     [SerializeField] private float _usage = 1;
     [SerializeField] private Health _playerHealth;
-     
+
     private float _currentFuelAmount;
     private bool _useFuel = true; // use for infinte fuel pick-up
 
@@ -29,6 +29,7 @@ public class Fuel : MonoBehaviour
         if (Player.IsMoving && _useFuel)
         {
             _currentFuelAmount -= _usage * Time.deltaTime;
+            GameEvents.PlayerFuelUpdate(_currentFuelAmount);
         }
 
         // if player runs out of fuel, player dies
@@ -36,11 +37,9 @@ public class Fuel : MonoBehaviour
         {
             _playerHealth.Death();
         }
-        //print(_currentFuelAmount);
-
-        // if player eliminates enemy, gain fuel
-        //if () { }
     }
+
+    public void SetUseFuel(bool useFuel) => _useFuel = useFuel;
 
     public void AddFuel(float fuelAmount)
     {

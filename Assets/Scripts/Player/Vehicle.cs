@@ -5,7 +5,7 @@ public class Vehicle : MonoBehaviour
     private Rigidbody _playerRB;
 
     private float _currentPlayerVelocity;
-    private float CurrentPlayerVelocity
+    public float CurrentPlayerVelocity
     {
         //get => _currentPlayerVelocity;
         set

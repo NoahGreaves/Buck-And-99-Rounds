@@ -4,9 +4,9 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     // Vehicle Values
-    [Header("Vehicle Movement")]
+    [Header("Vehicle")]
+    [SerializeField] private GameObject _playerVehicleModel;
     [SerializeField] private float _moveSpeed = 50f;
-    [SerializeField] private float _turnSpeed = 30f;
     [SerializeField] private float _groundDrag = 4;
     [SerializeField] private float _airDrag = 0.1f;
 
@@ -16,6 +16,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float _driftIntensity = 5;
     [SerializeField] private float _driftDecay = .95f;
     [SerializeField] private float _driftFactor = 1f;
+    [SerializeField] private float _driftBoostFactor = 2f;
 
     // Thresholds
     [Space(10)]
@@ -28,12 +29,14 @@ public class PlayerMovement : MonoBehaviour
     public Rigidbody VehicleRB { get => RB; }
     private Vector2 _moveInput;
     private LayerMask _groundMask = 10;
+    private Fuel _playerFuel;
 
     private bool _grounded;
     private float _groundCheckDistance = 1f;
 
     private bool _isDrifting = false;
     private Vector3 _lastVeloctiy;
+    [SerializeField] private float _driftBoostAmount = 0f;
 
     private bool _canPlayerSpeedKill = false;
     public bool CanPlayerSpeedKill { get => _canPlayerSpeedKill; }
@@ -44,6 +47,7 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
     {
         RB = gameObject.GetComponentInChildren<Rigidbody>();
+        _playerFuel = GetComponent<Fuel>();
 
         // detach rb from parent
         RB.transform.parent = null;
@@ -51,23 +55,16 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        // Set Vehicle Position to be the same as the 'Engine' Rigidbody
-        transform.position = RB.position;
-
-        // Set Player Rotation Based on Input and Whether the Player is on a ramp or not
-        SetRotation();
-
         // Check if the player is moving fast enough to eliminate an enemy
         CheckPlayerCanKillWithSpeed();
-
-        // Set RB drag if player is falling or on the ground (Ground resistance / Air Resistance) 
-        RB.drag = _grounded ? _groundDrag : _airDrag;
     }
 
     private void FixedUpdate()
     {
         MovePlayer();
-        _lastVeloctiy = RB.velocity;
+
+        
+        //_grounded = IsGrounded(out RaycastHit hit);
     }
 
     // Get Player Input
@@ -75,6 +72,7 @@ public class PlayerMovement : MonoBehaviour
     public void OnMove(InputAction.CallbackContext context)
     {
         _moveInput = context.ReadValue<Vector2>();
+        SetFuelUsage();
     }
 
     public void OnBoost(InputAction.CallbackContext context)
@@ -102,7 +100,7 @@ public class PlayerMovement : MonoBehaviour
         float currentSpeed = _isDrifting ? speed / _driftIntensity : speed;
 
         // Apply forces to simulate car movement.
-        Vector3 moveForce = currentSpeed * moveInput * transform.forward;
+        Vector3 moveForce = currentSpeed * moveInput * _playerVehicleModel.transform.forward;
         RB.AddForce(moveForce, ForceMode.Acceleration);
 
         Drift(currentSpeed);
@@ -117,6 +115,14 @@ public class PlayerMovement : MonoBehaviour
         {
             // Reduce drift factor over time if not drifting.
             _driftFactor = Mathf.Lerp(_driftFactor, 1f, Time.deltaTime * _driftDecay);
+
+            // if player has 
+            if (_driftBoostAmount > 0) 
+            {
+                RB.AddForce(transform.forward * _driftBoostAmount, ForceMode.Impulse);
+                _driftBoostAmount = 0f;
+            }
+
             return;
         }
 
@@ -131,17 +137,16 @@ public class PlayerMovement : MonoBehaviour
         Vector3 driftForce = _driftFactor * currentSpeed * (turnInput * result);
         testdriftForce = driftForce;
 
+        _driftBoostAmount += _driftBoostFactor * Time.deltaTime;
         RB.AddForce(driftForce, ForceMode.Acceleration);
     }
 
-    private void SetRotation()
+    private void SetFuelUsage() 
     {
-        // Set Vehicle Rotation only while the player is moving
-        float newRot = Player.IsMoving ? (_moveInput.x * _turnSpeed) * Time.deltaTime : 0f;
-        transform.Rotate(0, newRot, 0, Space.World);
-
-        _grounded = IsGrounded(out RaycastHit hit);
-        transform.rotation = Quaternion.FromToRotation(transform.up, hit.normal) * transform.rotation;
+        if (_moveInput.y != 0)
+            _playerFuel.SetUseFuel(true);
+        else
+            _playerFuel.SetUseFuel(false);
     }
 
     private bool IsGrounded(out RaycastHit hit)
@@ -157,7 +162,6 @@ public class PlayerMovement : MonoBehaviour
     {
         bool canPlayerSpeedKill = CheckVelocity(_minSpeedToKill);
         Player.CanSpeedKill = canPlayerSpeedKill;
-        print(Player.CanSpeedKill);
     }
 
     private void CheckAndSetPlayerHitMaxSpeed()
@@ -192,11 +196,11 @@ public class PlayerMovement : MonoBehaviour
     {
         // DEBUG
         Gizmos.color = Color.green;
-        Gizmos.DrawLine(transform.position, transform.forward * 1000);
+        Gizmos.DrawLine(_playerVehicleModel.transform.position, _playerVehicleModel.transform.forward * 1000);
 
         Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(transform.position, _lastVeloctiy * 1000);
+        Gizmos.DrawLine(_playerVehicleModel.transform.position, _lastVeloctiy * 1000);
 
-        Debug.DrawRay(transform.position, testdriftForce * 1000, Color.red);
+        Debug.DrawRay(_playerVehicleModel.transform.position, testdriftForce * 1000, Color.red);
     }
 }

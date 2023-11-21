@@ -16,11 +16,12 @@ public class Weapon_Pistol : Weapon
         yield return base.Cooldown(cooldown);
     }
 
-    protected override void Fire(Vector3 weaponDirection)
+    protected override void Fire()
     {
-        base.Fire(weaponDirection);
-        var bullet = Instantiate(bulletPrefab, _projectileSpawnPoint.position, bulletPrefab.transform.rotation);
-        bullet.transform.forward = weaponDirection;
+        base.Fire();
+
+        // Change to object pooling
+        var bullet = Instantiate(bulletPrefab, _projectileSpawnPoint.position, _projectileSpawnPoint.rotation);
         bullet.StartCountdown();
     }
 }

@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
@@ -7,6 +8,8 @@ public class UIController : MonoBehaviour
     [Header("Player Stats")]
     [SerializeField] private TextMeshProUGUI _playerVelocity;
     [SerializeField] private TextMeshProUGUI _playerHealth;
+    [SerializeField] private TextMeshProUGUI _playerFuel;
+    [SerializeField] private Slider _fuelSlider; 
 
     [Space(10)]
     [Header("Level Stats")]
@@ -23,6 +26,13 @@ public class UIController : MonoBehaviour
         SubscribeToEvents();
     }
 
+
+    private void Start()
+    {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
     private void OnDisable()
     {
         UnsubscribeToEvents();
@@ -35,6 +45,7 @@ public class UIController : MonoBehaviour
         GameEvents.OnPlayerHealthUpdate += UpdateHealthUI;
         GameEvents.OnPlayerElimination += PlayerEliminationUI;
         GameEvents.OnPlayerVelocityUpdate += UpdateVelocityUI;
+        GameEvents.OnPlayerFuelUpdate += UpdateFuelAmount;
 
         GameEvents.OnEnemyCountUpdate += EnemyCountUI;
     }
@@ -46,6 +57,7 @@ public class UIController : MonoBehaviour
         GameEvents.OnPlayerHealthUpdate -= UpdateHealthUI;
         GameEvents.OnPlayerElimination -= PlayerEliminationUI;
         GameEvents.OnPlayerVelocityUpdate -= UpdateVelocityUI;
+        GameEvents.OnPlayerFuelUpdate -= UpdateFuelAmount;
 
         GameEvents.OnEnemyCountUpdate -= EnemyCountUI;
     }
@@ -59,6 +71,12 @@ public class UIController : MonoBehaviour
     {
         newVelocity /= METERS_PER_SECOND_TO_KILOMETERS_PER_HOUR; // converts from m/s to km/hr
         _playerVelocity.text = $"{(int)newVelocity}km/hr";
+    }
+
+    private void UpdateFuelAmount(float fuelAmount)
+    {
+        _playerFuel.text = $"Fuel: {(int)fuelAmount}";
+        _fuelSlider.value = fuelAmount;
     }
 
     // Count Enemies in Current Level
@@ -80,5 +98,7 @@ public class UIController : MonoBehaviour
     {
         Time.timeScale = 0f;
         _gameOverScreen.SetActive(true);
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
 }
