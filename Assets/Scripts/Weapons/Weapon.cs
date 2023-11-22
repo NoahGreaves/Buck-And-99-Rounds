@@ -57,7 +57,7 @@ public class Weapon : MonoBehaviour
         var health = target.GetComponent<Health>();
         if (health != null)
         {
-            print(health.gameObject.name);
+            //print(health.gameObject.name);
             health.TakeDamage(meleeDamage);
         }
         StartCoroutine(Cooldown(meleeCooldown));

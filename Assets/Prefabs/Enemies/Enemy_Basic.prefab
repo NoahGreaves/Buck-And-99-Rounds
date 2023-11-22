@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5779176346631321049}
   - component: {fileID: 3512945557558821572}
   - component: {fileID: 548512248330233075}
-  m_Layer: 6
+  m_Layer: 12
   m_Name: MeleeWeapon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -172,6 +172,7 @@ GameObject:
   - component: {fileID: 411662110334168247}
   - component: {fileID: 6728040523188059886}
   - component: {fileID: 2890313735179151865}
+  - component: {fileID: 1518581968275910064}
   m_Layer: 6
   m_Name: Enemy_Basic
   m_TagString: Untagged
@@ -345,7 +346,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rotationSpeed: 5
-  Health: 100
   _targetDistanceThreshold: 0.5
   _currentWeapon: {fileID: 0}
   _damageOnContact: 10
@@ -417,3 +417,21 @@ MonoBehaviour:
   _obstacleMask:
     serializedVersion: 2
     m_Bits: 0
+--- !u!114 &1518581968275910064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4930657989855988246}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4bb62cb761468b4aa75521ef4f5f2b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Test Shitter
+  _weaponIsMelee: 1
+  meleeDamage: 10
+  meleeCooldown: 1.5
+  bulletPrefab: {fileID: 0}
+  rangedCooldown: 1.5

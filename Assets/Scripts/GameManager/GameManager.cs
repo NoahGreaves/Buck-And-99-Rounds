@@ -8,6 +8,6 @@ public class GameManager : MonoBehaviour
     public void RestartLevel() 
     {
         Scene scene = SceneManager.GetActiveScene();
-        SceneManager.LoadScene(scene.name);
+        SceneManager.LoadScene(scene.name, LoadSceneMode.Additive);
     }
 }

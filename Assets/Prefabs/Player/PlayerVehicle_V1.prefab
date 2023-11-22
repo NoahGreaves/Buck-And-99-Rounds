@@ -350,11 +350,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b3e5031961c1dc499bd2475d151958b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerVehicleModel: {fileID: 0}
-  _playerFuel: {fileID: 0}
+  _model: {fileID: 3497448658723701650}
   _moveSpeed: 25
-  _groundDrag: 1
-  _airDrag: 0.1
+  _boostIntesity: 5
+  _boostIncrement: 0.95
+  _boostFactor: 1
   _driftIntensity: 3
   _driftDecay: 0.95
   _driftFactor: 1
@@ -567,7 +567,7 @@ GameObject:
   - component: {fileID: 4714682997792927990}
   - component: {fileID: 5547073142528180356}
   - component: {fileID: 367872962674794519}
-  m_Layer: 3
+  m_Layer: 11
   m_Name: Car_Weapon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -583,8 +583,8 @@ Transform:
   m_GameObject: {fileID: 9011499196575802298}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.5450001}
-  m_LocalScale: {x: 1.8658, y: 0.28844833, z: 0.0857858}
+  m_LocalPosition: {x: 0, y: -0.25, z: 0.564}
+  m_LocalScale: {x: 1.8658, y: 0.28844833, z: 0.09543652}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3836517265704091555}

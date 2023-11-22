@@ -17,8 +17,8 @@ TagManager:
   - Enemy_Projectile
   - Level_Environment
   - Level_Ground
-  - 
-  - 
+  - Player_Vehicle_Weapon
+  - Enemy_Weapon
   - 
   - 
   - 

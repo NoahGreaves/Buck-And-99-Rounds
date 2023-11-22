@@ -5,10 +5,13 @@ public class PlayerMovement : MonoBehaviour
 {
     // Vehicle Values
     [Header("Vehicle")]
-    [SerializeField] private GameObject _playerVehicleModel;
+    [SerializeField] private GameObject _model;
     [SerializeField] private float _moveSpeed = 50f;
-    [SerializeField] private float _groundDrag = 4;
-    [SerializeField] private float _airDrag = 0.1f;
+
+    [Header("Boost")]
+    [SerializeField] private float _boostIntesity = 5f;
+    [SerializeField] private float _boostIncrement = 0.95f;
+    [SerializeField] private float _boostFactor = 1f;
 
     // Drifting Variabless
     [Space(10)]
@@ -62,8 +65,8 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         MovePlayer();
+        BoostAfterTurn();
 
-        
         //_grounded = IsGrounded(out RaycastHit hit);
     }
 
@@ -96,16 +99,14 @@ public class PlayerMovement : MonoBehaviour
         // Get the input for car movement.
         float moveInput = _moveInput.y;
 
-        // Calculate speed and torque.
-        float currentSpeed = _isDrifting ? speed / _driftIntensity : speed;
-
         // Apply forces to simulate car movement.
-        Vector3 moveForce = currentSpeed * moveInput * _playerVehicleModel.transform.forward;
+        Vector3 moveForce = speed * moveInput * _model.transform.forward;
         RB.AddForce(moveForce, ForceMode.Acceleration);
 
-        Drift(currentSpeed);
+        //Drift(currentSpeed);
     }
 
+    // SWITCH TO HANDBRAKE THAT SLOWS YOU OVER TIME IN THE CURRENT DIRECTION THE PLAYER IS MOVING
     private void Drift(float currentSpeed) 
     {
         float turnInput = _moveInput.x;
@@ -138,7 +139,24 @@ public class PlayerMovement : MonoBehaviour
         testdriftForce = driftForce;
 
         _driftBoostAmount += _driftBoostFactor * Time.deltaTime;
-        RB.AddForce(driftForce, ForceMode.Acceleration);
+        //RB.AddForce(driftForce, ForceMode.Acceleration);
+    }
+
+    private void BoostAfterTurn()
+    {
+        // _boostAmount
+        var isTurning = _moveInput.x != 0;
+        if (!isTurning)
+        {
+            // boost player in forward direction after the turn is complete 
+            RB.AddForce(_boostFactor * _moveInput.y * _model.transform.forward, ForceMode.Impulse);
+            _boostFactor = 0f;
+        }
+        if (isTurning)
+        {
+            _boostFactor = Mathf.Lerp(_boostFactor, _boostIntesity, _boostIncrement * Time.deltaTime);
+
+        }
     }
 
     private void SetFuelUsage() 
@@ -196,11 +214,11 @@ public class PlayerMovement : MonoBehaviour
     {
         // DEBUG
         Gizmos.color = Color.green;
-        Gizmos.DrawLine(_playerVehicleModel.transform.position, _playerVehicleModel.transform.forward * 1000);
+        Gizmos.DrawLine(_model.transform.position, _model.transform.forward * 1000);
 
         Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(_playerVehicleModel.transform.position, _lastVeloctiy * 1000);
+        Gizmos.DrawLine(_model.transform.position, _lastVeloctiy * 1000);
 
-        Debug.DrawRay(_playerVehicleModel.transform.position, testdriftForce * 1000, Color.red);
+        Debug.DrawRay(_model.transform.position, testdriftForce * 1000, Color.red);
     }
 }
