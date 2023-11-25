@@ -18,8 +18,13 @@ public class UIController : MonoBehaviour
     [Space(10)]
     [Header("Screens")]
     [SerializeField] private GameObject _gameOverScreen;
+    [SerializeField] private GameObject _debugScreen;
 
     private const float METERS_PER_SECOND_TO_KILOMETERS_PER_HOUR = 3.6f;
+
+    /// <summary>
+    /// MAKE A DEBUG MENUE
+    /// </summary>
 
     private void OnEnable()
     {
@@ -38,6 +43,7 @@ public class UIController : MonoBehaviour
         UnsubscribeToEvents();
     }
 
+    #region EventSubscription
     private void SubscribeToEvents() 
     {
         // Player
@@ -61,6 +67,7 @@ public class UIController : MonoBehaviour
 
         GameEvents.OnEnemyCountUpdate -= EnemyCountUI;
     }
+    #endregion
 
     private void UpdateHealthUI(float newHealth) 
     {
@@ -97,8 +104,23 @@ public class UIController : MonoBehaviour
     private void PlayerDeathUI()
     {
         Time.timeScale = 0f;
-        _gameOverScreen.SetActive(true);
+        SetGameOverScreen(true);
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
     }
+
+    private void SetGameOverScreen(bool isActive)
+    {
+        _gameOverScreen.SetActive(isActive);
+    }
+
+    #region Button Presses
+
+    public void OnGameOverRestartPressed() 
+    {
+        SetGameOverScreen(false);
+        Time.timeScale = 1f;
+    }
+
+    #endregion
 }

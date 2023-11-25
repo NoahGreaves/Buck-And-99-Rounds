@@ -12,6 +12,7 @@ public class Objective : MonoBehaviour
 
     private ObjectiveData _objectiveData;
     private bool _isComplete = false;
+    public bool IsComplete => _isComplete;
 
     private void Awake()
     {
@@ -47,7 +48,9 @@ public class Objective : MonoBehaviour
     public void SetIsCompleted(bool isCompleted)
     {
         _objectiveData.IsComplete = isCompleted;
+        _isComplete = isCompleted;
 
+        GameEvents.AlertMainObjective(_objectiveType);
         ObjectiveData.CountObjectives(this, _objectiveData);
     }
 }

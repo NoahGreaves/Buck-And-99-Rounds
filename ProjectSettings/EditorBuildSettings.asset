@@ -4,5 +4,15 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/GameManager.unity
+    guid: 349880d4df2805243a81fe10c5af3420
+  - enabled: 1
+    path: Assets/Scenes/Playground_Shit.unity
+    guid: 89b14b2fd45a14f41a24ea17a9aa6aa3
+  - enabled: 1
+    path: Assets/Scenes/Test_Level_1.unity
+    guid: fa00e24ffcd6d9f44b3ea104ada4980b
   m_configObjects: {}
+  m_UseUCBPForAssetBundles: 0

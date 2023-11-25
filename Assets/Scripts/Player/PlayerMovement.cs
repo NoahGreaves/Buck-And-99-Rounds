@@ -67,6 +67,11 @@ public class PlayerMovement : MonoBehaviour
         MovePlayer();
         BoostAfterTurn();
 
+        // REMOVE AND MAKE THIS PART OF A DEBUG MENU 
+        if (Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            _playerFuel.enabled = !_playerFuel;
+        }
         //_grounded = IsGrounded(out RaycastHit hit);
     }
 
@@ -107,7 +112,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
     // SWITCH TO HANDBRAKE THAT SLOWS YOU OVER TIME IN THE CURRENT DIRECTION THE PLAYER IS MOVING
-    private void Drift(float currentSpeed) 
+    private void Drift(float currentSpeed)
     {
         float turnInput = _moveInput.x;
 
@@ -118,7 +123,7 @@ public class PlayerMovement : MonoBehaviour
             _driftFactor = Mathf.Lerp(_driftFactor, 1f, Time.deltaTime * _driftDecay);
 
             // if player has 
-            if (_driftBoostAmount > 0) 
+            if (_driftBoostAmount > 0)
             {
                 RB.AddForce(transform.forward * _driftBoostAmount, ForceMode.Impulse);
                 _driftBoostAmount = 0f;
@@ -159,7 +164,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void SetFuelUsage() 
+    private void SetFuelUsage()
     {
         if (_moveInput.y != 0)
             _playerFuel.SetUseFuel(true);

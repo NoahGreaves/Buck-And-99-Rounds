@@ -11,6 +11,8 @@ public class Health : MonoBehaviour
     private bool _isAlive = true;
     private Objective _objective;
 
+    private bool _canTakeDamage = true;
+
     private float _currentHealth;
     private float CurrentHealth
     { 
@@ -35,7 +37,6 @@ public class Health : MonoBehaviour
         }
 
         _objective = GetComponent<Objective>();
-
     }
 
     private void Start()
@@ -45,6 +46,10 @@ public class Health : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        // If the player speed can kill, dont deal damager to player
+        if (_isPlayer && Player.CanSpeedKill)
+            return;
+
         CurrentHealth -= damage;
         if (CurrentHealth <= 0)
             Death();

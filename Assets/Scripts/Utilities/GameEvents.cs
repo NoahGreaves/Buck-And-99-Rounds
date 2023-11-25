@@ -8,8 +8,14 @@ public delegate void OnPlayerGivenFuel(float fuelAmount);
 
 // OBJECTIVES
 public delegate void OnObjectiveComplete();
+public delegate void OnAlertMainObjective(ObjectiveType objectiveType);
 public delegate void OnEnemyCountUpdate(int enemyCount);
 public delegate void OnGetObjectives(ObjectiveType objectiveType);
+public delegate void OnRoomObjectivesComplete();
+public delegate void OnAlertRoomObjectiveComplete();
+
+// PROGRESSION
+public delegate void OnRoomProgression();
 
 // ENEMIES
 public delegate void OnEnemyKilled(Enemy enemy);
@@ -40,9 +46,28 @@ public static class GameEvents
     public static event OnObjectiveComplete OnObjectiveComplete;
     public static void ObjectiveComplete() => OnObjectiveComplete?.Invoke();
 
+    public static event OnAlertMainObjective OnAlertMainObjective;
+    public static void AlertMainObjective(ObjectiveType objectiveType) => OnAlertMainObjective?.Invoke(objectiveType);
+
     public static event OnGetObjectives OnGetObjectives;
     public static void GetObjectives(ObjectiveType objectiveType) => OnGetObjectives?.Invoke(objectiveType);
 
+    public static event OnRoomObjectivesComplete OnRoomObjectivesComplete;
+    public static void RoomObjectivesComplete() => OnRoomObjectivesComplete.Invoke();
+
+    public static event OnAlertRoomObjectiveComplete OnAlertRoomObjectiveComplete;
+    public static void AlertRoomObjectiveComplete() => OnAlertRoomObjectiveComplete.Invoke();
+    #endregion
+
+    #region PROGRESSION
+
+    public static event OnRoomProgression OnRoomProgression;
+    public static void RoomProgression() => OnRoomProgression.Invoke();
+
+    #endregion
+
+
+    #region UI UPDATES
     // UPDATES THE ENEMY COUNT UI
     public static event OnEnemyCountUpdate OnEnemyCountUpdate;
     public static void EnemyCountUpdate(int enemyCount) => OnEnemyCountUpdate?.Invoke(enemyCount);
