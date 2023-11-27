@@ -5,7 +5,7 @@ using UnityEngine;
 public class Health : MonoBehaviour
 {
     [SerializeField] private bool _isPlayer = false;
-    [SerializeField] private float _health = 100;
+    [SerializeField] private float _maxHealth = 100;
     [SerializeField] private float _fuelAmount = 10f;
 
     private bool _isAlive = true;
@@ -37,11 +37,13 @@ public class Health : MonoBehaviour
         }
 
         _objective = GetComponent<Objective>();
+
+        GameEvents.OnRoomReset += ResetHealth;
     }
 
     private void Start()
     {
-        CurrentHealth = _health;
+        CurrentHealth = _maxHealth;
     }
 
     public void TakeDamage(float damage)
@@ -58,7 +60,12 @@ public class Health : MonoBehaviour
     private void RestoreHP(float hpAmount, bool fullHP = false)
     {
         // if fullHP is true, set to the max health, else restore the hpAmount
-        CurrentHealth = fullHP ? _health : _currentHealth + hpAmount;
+        CurrentHealth = fullHP ? _maxHealth : _currentHealth + hpAmount;
+    }
+
+    private void ResetHealth() 
+    {
+        CurrentHealth = _maxHealth;
     }
 
     // TODO: Implement proper death ( animations, audio, vfx )

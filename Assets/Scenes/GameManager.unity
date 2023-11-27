@@ -1209,8 +1209,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 999032089}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.24446091, y: 0.032267123, z: -0.008139665, w: 0.96908796}
-  m_LocalPosition: {x: 6.53, y: 9.3, z: -1}
+  m_LocalRotation: {x: 0.2444609, y: 0.03226712, z: -0.008139663, w: 0.96908796}
+  m_LocalPosition: {x: 0, y: 9.3, z: -9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -1335,7 +1335,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1363155979}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: RestartLevel
+        m_MethodName: RestartRoom
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2009,8 +2009,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1690261019}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.24446091, y: 0.032267123, z: -0.008139665, w: 0.96908796}
-  m_LocalPosition: {x: 6.53, y: 9.3, z: -1}
+  m_LocalRotation: {x: 0.2444609, y: 0.03226712, z: -0.008139663, w: 0.96908796}
+  m_LocalPosition: {x: 0, y: 9.3, z: -9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2282,6 +2282,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2958499843678048414, guid: caa21f7d7461c6f49ac6f6f8e703f5f2, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2958499843678048414, guid: caa21f7d7461c6f49ac6f6f8e703f5f2, type: 3}
       propertyPath: _equippedWeapon
       value: 
       objectReference: {fileID: 0}
@@ -2299,7 +2303,7 @@ PrefabInstance:
       objectReference: {fileID: 1944306348}
     - target: {fileID: 5935730007040177704, guid: caa21f7d7461c6f49ac6f6f8e703f5f2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6.53
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5935730007040177704, guid: caa21f7d7461c6f49ac6f6f8e703f5f2, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2307,7 +2311,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5935730007040177704, guid: caa21f7d7461c6f49ac6f6f8e703f5f2, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 8
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5935730007040177704, guid: caa21f7d7461c6f49ac6f6f8e703f5f2, type: 3}
       propertyPath: m_LocalRotation.w

@@ -14,8 +14,9 @@ public delegate void OnGetObjectives(ObjectiveType objectiveType);
 public delegate void OnRoomObjectivesComplete();
 public delegate void OnAlertRoomObjectiveComplete();
 
-// PROGRESSION
-public delegate void OnRoomProgression();
+// ROOMS MANAGEMENT
+public delegate void OnRoomProgression(RoomCollection roomCollection);
+public delegate void OnRoomReset();
 
 // ENEMIES
 public delegate void OnEnemyKilled(Enemy enemy);
@@ -59,13 +60,13 @@ public static class GameEvents
     public static void AlertRoomObjectiveComplete() => OnAlertRoomObjectiveComplete.Invoke();
     #endregion
 
-    #region PROGRESSION
-
+    #region ROOM MANAGEMENT
     public static event OnRoomProgression OnRoomProgression;
-    public static void RoomProgression() => OnRoomProgression.Invoke();
+    public static void RoomProgression(RoomCollection roomCollection) => OnRoomProgression.Invoke(roomCollection);
 
+    public static event OnRoomReset OnRoomReset;
+    public static void RoomReset() => OnRoomReset.Invoke();
     #endregion
-
 
     #region UI UPDATES
     // UPDATES THE ENEMY COUNT UI

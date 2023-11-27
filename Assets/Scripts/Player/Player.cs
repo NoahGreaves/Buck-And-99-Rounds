@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct Player 
+public static class Player 
 {
     public static int LAYER = 3;
 

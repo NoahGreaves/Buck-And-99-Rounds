@@ -31,7 +31,6 @@ public class UIController : MonoBehaviour
         SubscribeToEvents();
     }
 
-
     private void Start()
     {
         Cursor.visible = false;
