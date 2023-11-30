@@ -44,8 +44,7 @@ public class EliminationObjective : MonoBehaviour
             completed = enemy.IsComplete;
             if (completed)
                 continue;
-            else
-                break;
+            break;
         }
 
         print($"Objective is Complete: {completed}");

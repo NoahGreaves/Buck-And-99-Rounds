@@ -7,10 +7,20 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private bool _isTestBuild = true;
 
-    private const int HUB_WORLD_INDEX = 1;
-    private const int TEST_ROOM_INDEX = 2;
     private int _currentRoomIndex;
     private int _roomCount;
+
+    private static Vehicle _playerVehicle;
+    public static Vehicle PlayerVehicle
+    {
+        get => _playerVehicle;
+        set 
+        {
+            _playerVehicle = value;
+            
+            // Whatever else will need to happen when player vehcile is set
+        }
+    }
 
     private void OnEnable()
     {
@@ -20,13 +30,10 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        //_currentRoomIndex = STARTING_ROOM_INDEX;
-        //if (_isTestBuild)
-        //    _currentRoomIndex = TEST_ROOM_INDEX;
-
-        _currentRoomIndex = HUB_WORLD_INDEX;
+        _currentRoomIndex = (int)RoomCollection.HUB_ROOM;
 
         LoadInitialRoom();
+        ResetPlayerPosition();
     }
 
     private void OnDisable()
@@ -37,14 +44,7 @@ public class GameManager : MonoBehaviour
     private void LoadInitialRoom()
     {
         SceneManager.LoadScene(_currentRoomIndex, LoadSceneMode.Additive);
-    }
-
-    private void LoadStartingRoom()
-    {
-        var roomName = GetCurrentRoomName();
-        SceneManager.UnloadSceneAsync(roomName);
-
-        SceneManager.LoadScene(_currentRoomIndex, LoadSceneMode.Additive);
+        ResetPlayerPosition();
     }
 
     private void LoadNextRoom(RoomCollection roomCollection)
@@ -55,9 +55,10 @@ public class GameManager : MonoBehaviour
 
         _currentRoomIndex = (int)roomCollection;
         if (_currentRoomIndex > _roomCount || _currentRoomIndex <= 0)
-            _currentRoomIndex = HUB_WORLD_INDEX;
+            _currentRoomIndex = (int)RoomCollection.HUB_ROOM;
 
         SceneManager.LoadScene(_currentRoomIndex, LoadSceneMode.Additive);
+        ResetPlayerPosition();
     }
 
     public void RestartRoom()
@@ -67,12 +68,18 @@ public class GameManager : MonoBehaviour
         if (_isTestBuild)
         {
             SceneManager.UnloadSceneAsync(currentLevelScene);
-            SceneManager.LoadScene(TEST_ROOM_INDEX, LoadSceneMode.Additive);
+            SceneManager.LoadScene((int)RoomCollection.TEST_ROOM, LoadSceneMode.Additive);
             return;
         }
         
         SceneManager.LoadScene(_currentRoomIndex, LoadSceneMode.Additive);
+        ResetPlayerPosition();
         GameEvents.RoomReset();
+    }
+
+    private void ResetPlayerPosition() 
+    {
+        PlayerVehicle.transform.position = new Vector3(0, Player.CurrentPlayerVehicle.gameObject.transform.position.y, 0);
     }
 
     private string GetCurrentRoomName() 

@@ -1,3 +1,5 @@
+using UnityEngine;
+
 // PLAYER
 public delegate void OnPlayerHealthUpdate(float newHealth);
 public delegate void OnPlayerVelocityUpdate(float newVelocity);
@@ -21,6 +23,12 @@ public delegate void OnRoomReset();
 // ENEMIES
 public delegate void OnEnemyKilled(Enemy enemy);
 
+// ITEMS
+public delegate void OnExplosion(Vector3 explosionPosition, float explosionPower, float explosionRadius, float explosionUpwardForce, float explosionDamage);
+
+// PICKUPS
+public delegate void OnBombLauncherPickup();
+   
 public static class GameEvents
 {
     #region PLAYER
@@ -62,10 +70,20 @@ public static class GameEvents
 
     #region ROOM MANAGEMENT
     public static event OnRoomProgression OnRoomProgression;
-    public static void RoomProgression(RoomCollection roomCollection) => OnRoomProgression.Invoke(roomCollection);
+    public static void RoomProgression(RoomCollection roomCollection) => OnRoomProgression?.Invoke(roomCollection);
 
     public static event OnRoomReset OnRoomReset;
-    public static void RoomReset() => OnRoomReset.Invoke();
+    public static void RoomReset() => OnRoomReset?.Invoke();
+    #endregion
+
+    #region ITEM
+    public static event OnExplosion OnExplosion;
+    public static void Explosion(Vector3 explosionPosition, float explosionPower, float explosionRadius, float explosionUpwardForce, float explosionDamage) => OnExplosion?.Invoke(explosionPosition, explosionPower, explosionRadius, explosionUpwardForce, explosionDamage);
+    #endregion
+
+    #region PICKUP
+    public static event OnBombLauncherPickup OnBombLauncherPickup;
+    public static void BombLauncherPickup() => OnBombLauncherPickup?.Invoke();
     #endregion
 
     #region UI UPDATES

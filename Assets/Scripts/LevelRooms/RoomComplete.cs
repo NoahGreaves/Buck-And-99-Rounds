@@ -4,8 +4,9 @@ public enum RoomCollection
 {
     NO_ROOM = 0,
     HUB_ROOM,
-    TEST_ROOMS,
-    ROOM_LEVEL_1
+    TEST_ROOM,
+    ROOM_LEVEL_1,
+    ROOM_LEVEL_2
 }
 
 public class RoomComplete : MonoBehaviour
@@ -41,7 +42,6 @@ public class RoomComplete : MonoBehaviour
     {
         if (!_hasPlayerEntered && other.gameObject.layer != Player.LAYER)
             return;
-        print("SUP BITCH");
 
         _hasPlayerEntered = true;
         GameEvents.RoomProgression(_roomCollection);

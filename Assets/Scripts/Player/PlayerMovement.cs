@@ -187,15 +187,6 @@ public class PlayerMovement : MonoBehaviour
         Player.CanSpeedKill = canPlayerSpeedKill;
     }
 
-    private void CheckAndSetPlayerHitMaxSpeed()
-    {
-        bool playerMovingMaxSpeed = CheckVelocity(_maxMoveVelocity);
-        if (!playerMovingMaxSpeed)
-            return;
-
-        SetPlayerSpeed(_maxMoveVelocity);
-    }
-
     private void SetPlayerSpeed(float newSpeed)
     {
         RB.velocity = RB.velocity.normalized * newSpeed;

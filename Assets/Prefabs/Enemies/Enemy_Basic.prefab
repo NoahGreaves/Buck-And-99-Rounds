@@ -173,6 +173,7 @@ GameObject:
   - component: {fileID: 6728040523188059886}
   - component: {fileID: 2890313735179151865}
   - component: {fileID: 1518581968275910064}
+  - component: {fileID: 2100329832493152951}
   m_Layer: 6
   m_Name: Enemy_Basic
   m_TagString: Untagged
@@ -435,3 +436,15 @@ MonoBehaviour:
   meleeCooldown: 1.5
   bulletPrefab: {fileID: 0}
   rangedCooldown: 1.5
+--- !u!114 &2100329832493152951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4930657989855988246}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dc221d48b0f8d44294566029f9d68b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

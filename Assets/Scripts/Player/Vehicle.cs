@@ -21,6 +21,11 @@ public class Vehicle : MonoBehaviour
         _playerRB = gameObject.GetComponentInChildren<Rigidbody>();
     }
 
+    private void OnEnable()
+    {
+        GameManager.PlayerVehicle = this;
+    }
+
     private void Update()
     {
         CurrentPlayerVelocity = _playerRB.velocity.sqrMagnitude;
