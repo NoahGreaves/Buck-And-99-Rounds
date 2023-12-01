@@ -5,7 +5,7 @@ using UnityEngine;
 // Base Class For All Enemies
 public class Enemy : MonoBehaviour
 {
-    protected FieldOfView fov;
+    protected FieldOfView Fov;
 
     [SerializeField] protected float _rotationSpeed = 2f;
 
@@ -16,8 +16,8 @@ public class Enemy : MonoBehaviour
     private List<Transform> _decoyList = new List<Transform>();
     protected Transform targetPlayer;
 
-    protected GameObject playerTarget;
-    protected bool isLookingAtTarget = false;
+    protected GameObject PlayerTarget;
+    protected bool IsLookingAtTarget = false;
 
     protected NavMeshAgent agent;
 
@@ -28,12 +28,12 @@ public class Enemy : MonoBehaviour
 
     protected virtual void Start()
     {
-        fov = GetComponent<FieldOfView>();
+        Fov = GetComponent<FieldOfView>();
     }
 
     protected virtual void Update()
     {
-        var targets = fov.VisibleTargets;
+        var targets = Fov.VisibleTargets;
         if (targets.Count == 0)
             return;
 
@@ -90,19 +90,22 @@ public class Enemy : MonoBehaviour
     {
         // Raycast forward, if cast collides with Player/Decoy return true
         RaycastHit hit;
-        bool aimedAtTarget = Physics.Raycast(transform.position, transform.forward, out hit, fov.GetViewRadius, fov.GetTargetMask);
-        if (!aimedAtTarget)
-            return false;
-        bool aimedAtCorrectTarget = hit.transform.gameObject == playerTarget;
-        bool canShoot = aimedAtTarget && aimedAtCorrectTarget;
+        bool aimedAtTarget = Physics.Raycast(transform.position, transform.forward, out hit, Fov.GetViewRadius, Fov.GetTargetMask);
+        return aimedAtTarget;
 
-        // REFACTOR --> MAKE THE ENEMY STOP MOVING AND SHOOT THE PLAYER, MAKE THE ENEMY CHASE PLAYER IF PLAYER LEAVE FOV RADIUS?
-        if (canShoot)
-        {
-            agent.isStopped = true;
-        }
+        // KEEP INCASE DECOY IS SOMETHING THAT WE WANT TO REIMPLEMENT
+        //if (!aimedAtTarget)
+        //    return false;
+        //bool aimedAtCorrectTarget = hit.transform.gameObject == PlayerTarget;
+        //bool canShoot = aimedAtTarget && aimedAtCorrectTarget;
 
-        return canShoot;
+        //// REFACTOR --> MAKE THE ENEMY STOP MOVING AND SHOOT THE PLAYER, MAKE THE ENEMY CHASE PLAYER IF PLAYER LEAVE FOV RADIUS?
+        //if (canShoot)
+        //{
+        //    agent.isStopped = true;
+        //}
+
+        //return canShoot;
     }
 
     public void OnProjectileCollision(Projectile projectile)

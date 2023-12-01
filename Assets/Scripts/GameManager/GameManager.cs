@@ -14,10 +14,10 @@ public class GameManager : MonoBehaviour
     public static Vehicle PlayerVehicle
     {
         get => _playerVehicle;
-        set 
+        set
         {
             _playerVehicle = value;
-            
+
             // Whatever else will need to happen when player vehcile is set
         }
     }
@@ -79,7 +79,7 @@ public class GameManager : MonoBehaviour
 
     private void ResetPlayerPosition() 
     {
-        PlayerVehicle.transform.position = new Vector3(0, Player.CurrentPlayerVehicle.gameObject.transform.position.y, 0);
+        _playerVehicle.transform.position = new Vector3(0, Player.CurrentPlayerVehicle.gameObject.transform.position.y, 0);
     }
 
     private string GetCurrentRoomName() 

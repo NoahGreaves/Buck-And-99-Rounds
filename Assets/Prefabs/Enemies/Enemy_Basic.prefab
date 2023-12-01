@@ -169,7 +169,6 @@ GameObject:
   - component: {fileID: 6453176524099161387}
   - component: {fileID: 6575159010373835947}
   - component: {fileID: 4653006607034556585}
-  - component: {fileID: 411662110334168247}
   - component: {fileID: 6728040523188059886}
   - component: {fileID: 2890313735179151865}
   - component: {fileID: 1518581968275910064}
@@ -348,7 +347,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rotationSpeed: 5
   _targetDistanceThreshold: 0.5
-  _currentWeapon: {fileID: 0}
   _damageOnContact: 10
 --- !u!114 &4653006607034556585
 MonoBehaviour:
@@ -370,21 +368,6 @@ MonoBehaviour:
   _obstacleMask:
     serializedVersion: 2
     m_Bits: 512
---- !u!114 &411662110334168247
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4930657989855988246}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9b76b9472d36394a83f1ed306654718, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _isPlayer: 0
-  _maxHealth: 50
-  _fuelAmount: 10
 --- !u!114 &6728040523188059886
 MonoBehaviour:
   m_ObjectHideFlags: 0

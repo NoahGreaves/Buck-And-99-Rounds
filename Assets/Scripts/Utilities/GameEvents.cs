@@ -28,6 +28,7 @@ public delegate void OnExplosion(Vector3 explosionPosition, float explosionPower
 
 // PICKUPS
 public delegate void OnBombLauncherPickup();
+public delegate void OnForwardFacingShieldPickup();
    
 public static class GameEvents
 {
@@ -84,6 +85,9 @@ public static class GameEvents
     #region PICKUP
     public static event OnBombLauncherPickup OnBombLauncherPickup;
     public static void BombLauncherPickup() => OnBombLauncherPickup?.Invoke();
+
+    public static event OnForwardFacingShieldPickup OnForwardFacingShieldPickup;
+    public static void ForwardFacingShieldPickup() => OnForwardFacingShieldPickup?.Invoke();
     #endregion
 
     #region UI UPDATES

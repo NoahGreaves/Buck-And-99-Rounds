@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BombTrail_Pickup : Pickup
+public class BombLauncher_Pickup : Pickup
 {
     private void OnTriggerEnter(Collider other)
     {
@@ -10,7 +10,7 @@ public class BombTrail_Pickup : Pickup
         if (!isPlayer)
             return;
 
-        // Give player BombLauncher
+        // Give player Bomb Launcher
         GameEvents.BombLauncherPickup();
 
         // Change to Object Pooling
