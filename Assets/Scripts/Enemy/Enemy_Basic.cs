@@ -3,12 +3,6 @@ using UnityEngine;
 
 public class Enemy_Basic : Enemy
 {
-    [Header("Movement")]
-    [SerializeField] private float _targetDistanceThreshold = 0.5f;
-
-    [Header("Damage")]
-    [SerializeField] private float _damageOnContact = 10f;
-
     private void Awake()
     {
         agent = gameObject.GetComponent<NavMeshAgent>();

@@ -4,7 +4,7 @@ using UnityEngine;
 public class Explosive : MonoBehaviour
 {
     [SerializeField] private float _timeToExplode = 1f;
-    [SerializeField] private float _countdownAmount = 1f;
+    [SerializeField] private float _countdownMultiplier = 1f;
 
     [SerializeField] private Transform _explosionTransform;
     [SerializeField] private float _explosionPower;
@@ -23,7 +23,7 @@ public class Explosive : MonoBehaviour
 
     private void Update()
     {
-        _currentTimeToExplode -= Time.deltaTime * _countdownAmount;
+        _currentTimeToExplode -= Time.deltaTime * _countdownMultiplier;
         if (_currentTimeToExplode > 0)
             return;
 
@@ -31,6 +31,15 @@ public class Explosive : MonoBehaviour
             _hasExploded = true;
 
         Explode(_explosionTransform.position, _explosionPower, _explosionRadius, _explosionUpwardForce, _explosionDamage);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        var explodableObj = collision.gameObject.GetComponent<ExplodableObject>();
+        if (_hasExploded || explodableObj == null)
+            return;
+        Explode(_explosionTransform.position, _explosionPower, _explosionRadius, _explosionUpwardForce, _explosionDamage);
+        _hasExploded = true;
     }
 
     private void Explode(Vector3 explosionPosition, float explosionPower, float explosionRadius, float explosionUpwardForce, float explosionDamage)

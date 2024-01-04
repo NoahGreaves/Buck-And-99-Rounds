@@ -13,47 +13,30 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float _boostIncrement = 0.95f;
     [SerializeField] private float _boostFactor = 1f;
 
-    // Drifting Variabless
-    [Space(10)]
-    [Header("Drifting")]
-    [SerializeField] private float _driftIntensity = 5;
-    [SerializeField] private float _driftDecay = .95f;
-    [SerializeField] private float _driftFactor = 1f;
-    [SerializeField] private float _driftBoostFactor = 2f;
-
     // Thresholds
     [Space(10)]
     [Header("Player Movement Thresholds")]
-    [SerializeField] private float _maxMoveVelocity = 50f;
     [SerializeField] private float _minSpeedToKill = 25f;
 
     // Engine Rigidbody -> Gets detached and is controlled while the vehicle art is set to this objects position each frame
-    private Rigidbody RB;
-    public Rigidbody VehicleRB { get => RB; }
+    private Rigidbody _rb;
     private Vector2 _moveInput;
     private LayerMask _groundMask = 10;
     private Fuel _playerFuel;
 
     private bool _grounded;
-    private float _groundCheckDistance = 1f;
-
-    private bool _isDrifting = false;
-    private Vector3 _lastVeloctiy;
-    [SerializeField] private float _driftBoostAmount = 0f;
+    private const float GROUND_CHECK_DISTANCE = 1f;
 
     private bool _canPlayerSpeedKill = false;
     public bool CanPlayerSpeedKill { get => _canPlayerSpeedKill; }
 
-    // DEBUGGING
-    private Vector3 testdriftForce; // used for debugging
-
     private void Awake()
     {
-        RB = gameObject.GetComponentInChildren<Rigidbody>();
+        _rb = gameObject.GetComponentInChildren<Rigidbody>();
         _playerFuel = GetComponent<Fuel>();
 
         // detach rb from parent
-        RB.transform.parent = null;
+        // RB.transform.parent = null;
     }
 
     private void Update()
@@ -70,15 +53,35 @@ public class PlayerMovement : MonoBehaviour
         // REMOVE AND MAKE THIS PART OF A DEBUG MENU 
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
-            _playerFuel.enabled = !_playerFuel;
+            _playerFuel.enabled = !_playerFuel.enabled;
         }
-        //_grounded = IsGrounded(out RaycastHit hit);
+
+        // Checks if player is on the ground
+        _grounded = IsGrounded(out RaycastHit hit);
+        Debug.DrawLine(_model.transform.position, hit.normal);
+        Player.GroundNormal = hit.normal;
+        Player.IsGrounded = _grounded;
+        if (_grounded)
+        {
+            //var target = new Vector3(hit.normal.x, _model.transform.rotation.y, hit.normal.z);
+            //_model.transform.up = Vector3.Lerp(_model.transform.up, target, Time.deltaTime * 1f);
+            //_model.transform.Rotate(0, _model.transform.eulerAngles.y, 0);
+
+            //var rotation = _grounded ? hit.normal : _model.transform.rotation.eulerAngles;
+            //var rotation = hit.normal;
+            //_model.transform.rotation = Quaternion.Euler(rotation.x, _model.transform.rotation.y, rotation.z);
+        }
     }
 
     // Get Player Input
     #region Player Input
     public void OnMove(InputAction.CallbackContext context)
     {
+        if (!_grounded || !Player.CanMove)
+        {
+            return;
+        }
+
         _moveInput = context.ReadValue<Vector2>();
         SetFuelUsage();
     }
@@ -88,63 +91,21 @@ public class PlayerMovement : MonoBehaviour
         Boost();
     }
 
-    public void OnDrift(InputAction.CallbackContext context)
-    {
-        var isDrifting = context.ReadValue<float>();
-        _isDrifting = isDrifting == 1;
-    }
     #endregion
 
     private void MovePlayer()
     {
         var speed = _moveInput.y < 0 ? _moveSpeed * 0.5f : _moveSpeed;
 
-        Player.IsMoving = CheckVelocity(0);
-
         // Get the input for car movement.
         float moveInput = _moveInput.y;
 
         // Apply forces to simulate car movement.
         Vector3 moveForce = speed * moveInput * _model.transform.forward;
-        RB.AddForce(moveForce, ForceMode.Acceleration);
+        _rb.AddForce(moveForce, ForceMode.Acceleration);
 
-        //Drift(currentSpeed);
-    }
-
-    // SWITCH TO HANDBRAKE THAT SLOWS YOU OVER TIME IN THE CURRENT DIRECTION THE PLAYER IS MOVING
-    private void Drift(float currentSpeed)
-    {
-        float turnInput = _moveInput.x;
-
-        // Apply drifting force when drifting is enabled.
-        if (!_isDrifting)
-        {
-            // Reduce drift factor over time if not drifting.
-            _driftFactor = Mathf.Lerp(_driftFactor, 1f, Time.deltaTime * _driftDecay);
-
-            // if player has 
-            if (_driftBoostAmount > 0)
-            {
-                RB.AddForce(transform.forward * _driftBoostAmount, ForceMode.Impulse);
-                _driftBoostAmount = 0f;
-            }
-
-            return;
-        }
-
-        // Apply the player drift
-        float angle = Vector3.Angle(_lastVeloctiy, transform.right);
-        _driftFactor = Mathf.Lerp(_driftFactor, _driftIntensity, _driftDecay * Time.deltaTime);
-
-        Quaternion myRotation = Quaternion.AngleAxis(angle, Vector3.up);
-        Vector3 startingDirection = transform.right * _moveInput.x;
-        Vector3 result = myRotation * startingDirection;
-
-        Vector3 driftForce = _driftFactor * currentSpeed * (turnInput * result);
-        testdriftForce = driftForce;
-
-        _driftBoostAmount += _driftBoostFactor * Time.deltaTime;
-        //RB.AddForce(driftForce, ForceMode.Acceleration);
+        // Check if player is moving ( Units: km/hr )
+        Player.IsMoving = (int)_rb.velocity.sqrMagnitude / 3.6 > 0;
     }
 
     private void BoostAfterTurn()
@@ -154,7 +115,7 @@ public class PlayerMovement : MonoBehaviour
         if (!isTurning)
         {
             // boost player in forward direction after the turn is complete 
-            RB.AddForce(_boostFactor * _moveInput.y * _model.transform.forward, ForceMode.Impulse);
+            _rb.AddForce(_boostFactor * _moveInput.y * _model.transform.forward, ForceMode.Impulse);
             _boostFactor = 0f;
         }
         if (isTurning)
@@ -174,7 +135,8 @@ public class PlayerMovement : MonoBehaviour
 
     private bool IsGrounded(out RaycastHit hit)
     {
-        bool rayHitGround = Physics.Raycast(RB.transform.position, transform.TransformDirection(Vector3.down) * _groundCheckDistance, out hit, _groundMask);
+        //bool rayHitGround = Physics.Raycast(RB.transform.position, transform.TransformDirection(Vector3.down) * _groundCheckDistance, out hit, _groundMask);
+        bool rayHitGround = Physics.Raycast(_model.transform.position, _model.transform.TransformDirection(Vector3.down) * GROUND_CHECK_DISTANCE, out hit, _groundMask);
         if (rayHitGround)
             return true;
         else
@@ -187,11 +149,6 @@ public class PlayerMovement : MonoBehaviour
         Player.CanSpeedKill = canPlayerSpeedKill;
     }
 
-    private void SetPlayerSpeed(float newSpeed)
-    {
-        RB.velocity = RB.velocity.normalized * newSpeed;
-    }
-
     private void Boost()
     {
         // fix boost lol
@@ -201,20 +158,13 @@ public class PlayerMovement : MonoBehaviour
     private bool CheckVelocity(float velocityToCompare)
     {
         var sqrMaxVelocity = velocityToCompare * velocityToCompare;
-        if (RB.velocity.sqrMagnitude > sqrMaxVelocity)
+        if (_rb.velocity.sqrMagnitude > sqrMaxVelocity)
             return true;
         return false;
     }
 
-    private void OnDrawGizmos()
+    public void SetPlayerPosition(Vector3 newPosition) 
     {
-        // DEBUG
-        Gizmos.color = Color.green;
-        Gizmos.DrawLine(_model.transform.position, _model.transform.forward * 1000);
-
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(_model.transform.position, _lastVeloctiy * 1000);
-
-        Debug.DrawRay(_model.transform.position, testdriftForce * 1000, Color.red);
+        _rb.position = newPosition;
     }
 }

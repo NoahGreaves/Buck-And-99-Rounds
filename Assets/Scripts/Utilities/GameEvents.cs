@@ -2,6 +2,7 @@ using UnityEngine;
 
 // PLAYER
 public delegate void OnPlayerHealthUpdate(float newHealth);
+public delegate void OnPlayerLivesUpdate(int numOfLives);
 public delegate void OnPlayerVelocityUpdate(float newVelocity);
 public delegate void OnPlayerFuelUpdate(float newFuelAmount);
 public delegate void OnPlayerDeath();
@@ -19,6 +20,7 @@ public delegate void OnAlertRoomObjectiveComplete();
 // ROOMS MANAGEMENT
 public delegate void OnRoomProgression(RoomCollection roomCollection);
 public delegate void OnRoomReset();
+public delegate void OnRoomLoad();
 
 // ENEMIES
 public delegate void OnEnemyKilled(Enemy enemy);
@@ -35,6 +37,9 @@ public static class GameEvents
     #region PLAYER
     public static event OnPlayerHealthUpdate OnPlayerHealthUpdate;
     public static void PlayerHealthUpdate(float newHealth) => OnPlayerHealthUpdate?.Invoke(newHealth);
+    
+    public static event OnPlayerLivesUpdate OnPlayerLivesUpdate;
+    public static void PlayerLivesUpdate(int numOfLives) => OnPlayerLivesUpdate?.Invoke(numOfLives);
 
     public static event OnPlayerVelocityUpdate OnPlayerVelocityUpdate;
     public static void PlayerVelocityUpdate(float newVelocity) => OnPlayerVelocityUpdate?.Invoke(newVelocity);
@@ -75,6 +80,9 @@ public static class GameEvents
 
     public static event OnRoomReset OnRoomReset;
     public static void RoomReset() => OnRoomReset?.Invoke();
+    
+    public static event OnRoomLoad OnRoomLoad;
+    public static void RoomLoad() => OnRoomLoad?.Invoke();
     #endregion
 
     #region ITEM

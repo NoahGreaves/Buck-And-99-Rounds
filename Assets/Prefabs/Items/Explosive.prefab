@@ -146,10 +146,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 350e9a5ea40e2074f9cebcd9955208d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _timeToExplode: 2.5
-  _countdownAmount: 1
+  _timeToExplode: 1.35
+  _countdownMultiplier: 1
   _explosionTransform: {fileID: 1216462311035768729}
   _explosionPower: 1.5
-  _explosionRadius: 1
+  _explosionRadius: 1.5
   _explosionUpwardForce: 1.5
-  _explosionDamage: 10
+  _explosionDamage: 50

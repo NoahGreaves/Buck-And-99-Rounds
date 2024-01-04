@@ -8,10 +8,7 @@ public class Health : MonoBehaviour
     [SerializeField] private float _maxHealth = 100;
     [SerializeField] private float _fuelAmount = 10f;
 
-    private bool _isAlive = true;
     private Objective _objective;
-
-    private bool _canTakeDamage = true;
 
     private float _currentHealth;
     private float CurrentHealth
@@ -22,9 +19,6 @@ public class Health : MonoBehaviour
             _currentHealth = value;
             if (_isPlayer)
                 GameEvents.PlayerHealthUpdate(_currentHealth);
-
-            if (_currentHealth <= 0)
-                _isAlive = false;
         }
     }
 
@@ -77,7 +71,6 @@ public class Health : MonoBehaviour
             return;
         }
 
-        _isAlive = false;
         GameEvents.PlayerElimination();
 
         // Give player fuel on kill
@@ -100,6 +93,9 @@ public class Health : MonoBehaviour
         // sounds
 
         // animation
+
+        // Remove one of the players lives for the current run
+        Player.NumOfLives -= 1;
 
         // PROPER game over
         GameEvents.PlayerDeath();

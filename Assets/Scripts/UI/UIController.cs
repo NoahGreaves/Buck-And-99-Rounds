@@ -8,6 +8,7 @@ public class UIController : MonoBehaviour
     [Header("Player Stats")]
     [SerializeField] private TextMeshProUGUI _playerVelocity;
     [SerializeField] private TextMeshProUGUI _playerHealth;
+    [SerializeField] private TextMeshProUGUI _playerLives;
     [SerializeField] private TextMeshProUGUI _playerFuel;
     [SerializeField] private Slider _fuelSlider; 
 
@@ -23,12 +24,13 @@ public class UIController : MonoBehaviour
     private const float METERS_PER_SECOND_TO_KILOMETERS_PER_HOUR = 3.6f;
 
     /// <summary>
-    /// MAKE A DEBUG MENUE
+    /// MAKE A DEBUG MENU
     /// </summary>
 
     private void OnEnable()
     {
         SubscribeToEvents();
+        UpdatePlayerLivesUI(Player.NumOfLives);
     }
 
     private void Start()
@@ -48,6 +50,7 @@ public class UIController : MonoBehaviour
         // Player
         GameEvents.OnPlayerDeath += PlayerDeathUI;
         GameEvents.OnPlayerHealthUpdate += UpdateHealthUI;
+        GameEvents.OnPlayerLivesUpdate += UpdatePlayerLivesUI;
         GameEvents.OnPlayerElimination += PlayerEliminationUI;
         GameEvents.OnPlayerVelocityUpdate += UpdateVelocityUI;
         GameEvents.OnPlayerFuelUpdate += UpdateFuelAmount;
@@ -60,6 +63,7 @@ public class UIController : MonoBehaviour
         // Player
         GameEvents.OnPlayerDeath -= PlayerDeathUI;
         GameEvents.OnPlayerHealthUpdate -= UpdateHealthUI;
+        GameEvents.OnPlayerLivesUpdate -= UpdatePlayerLivesUI;
         GameEvents.OnPlayerElimination -= PlayerEliminationUI;
         GameEvents.OnPlayerVelocityUpdate -= UpdateVelocityUI;
         GameEvents.OnPlayerFuelUpdate -= UpdateFuelAmount;
@@ -71,6 +75,11 @@ public class UIController : MonoBehaviour
     private void UpdateHealthUI(float newHealth) 
     {
         _playerHealth.text = $"{newHealth}HP";
+    }
+
+    private void UpdatePlayerLivesUI(int numOfLives)
+    {
+        _playerLives.text = $"{numOfLives}";
     }
 
     private void UpdateVelocityUI(float newVelocity)
@@ -88,7 +97,7 @@ public class UIController : MonoBehaviour
     // Count Enemies in Current Level
     private void EnemyCountUI(int enemyCount)
     {
-        _numOfEnemiesRemaining.text = $"{enemyCount}";
+        _numOfEnemiesRemaining.text = $"Enemies: {enemyCount}";
 
         PlayerObjectiveCompleteUI();
     }

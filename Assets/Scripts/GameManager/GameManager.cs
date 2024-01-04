@@ -5,22 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private bool _isTestBuild = true;
-
     private int _currentRoomIndex;
+    private int _initRoomIndex;
     private int _roomCount;
-
-    private static Vehicle _playerVehicle;
-    public static Vehicle PlayerVehicle
-    {
-        get => _playerVehicle;
-        set
-        {
-            _playerVehicle = value;
-
-            // Whatever else will need to happen when player vehcile is set
-        }
-    }
 
     private void OnEnable()
     {
@@ -31,9 +18,9 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         _currentRoomIndex = (int)RoomCollection.HUB_ROOM;
+        _initRoomIndex = _currentRoomIndex;
 
         LoadInitialRoom();
-        ResetPlayerPosition();
     }
 
     private void OnDisable()
@@ -41,49 +28,46 @@ public class GameManager : MonoBehaviour
         GameEvents.OnRoomProgression -= LoadNextRoom;
     }
 
+    #region SceneLoading
     private void LoadInitialRoom()
     {
         SceneManager.LoadScene(_currentRoomIndex, LoadSceneMode.Additive);
-        ResetPlayerPosition();
+        GameEvents.RoomLoad();
     }
 
     private void LoadNextRoom(RoomCollection roomCollection)
     {
-        // _currentLevelIndex = (_currentLevelIndex + 1) % _gameLevels.Levels.Length;
-        var roomName = GetCurrentRoomName();
-        SceneManager.UnloadSceneAsync(roomName);
+        // _currentLevelIndex = (_currentLevelIndex + 1) % _roomCount;
+        var room = GetCurrentRoomIndex();
+        SceneManager.UnloadSceneAsync(room);
 
         _currentRoomIndex = (int)roomCollection;
         if (_currentRoomIndex > _roomCount || _currentRoomIndex <= 0)
             _currentRoomIndex = (int)RoomCollection.HUB_ROOM;
 
         SceneManager.LoadScene(_currentRoomIndex, LoadSceneMode.Additive);
-        ResetPlayerPosition();
+        GameEvents.RoomLoad();
+
     }
 
     public void RestartRoom()
     {
-        var activeScenes = SceneManager.sceneCount - 1;
-        var currentLevelScene = SceneManager.GetSceneAt(activeScenes);
-        if (_isTestBuild)
+        var currentRoom = GetCurrentRoomIndex();
+        SceneManager.UnloadSceneAsync(currentRoom);
+
+        if (Player.NumOfLives < 0)
         {
-            SceneManager.UnloadSceneAsync(currentLevelScene);
-            SceneManager.LoadScene((int)RoomCollection.TEST_ROOM, LoadSceneMode.Additive);
+            SceneManager.LoadScene(_initRoomIndex, LoadSceneMode.Additive);
+            GameEvents.RoomLoad();
             return;
         }
-        
+
         SceneManager.LoadScene(_currentRoomIndex, LoadSceneMode.Additive);
-        ResetPlayerPosition();
+
+        GameEvents.RoomLoad();
         GameEvents.RoomReset();
     }
 
-    private void ResetPlayerPosition() 
-    {
-        _playerVehicle.transform.position = new Vector3(0, Player.CurrentPlayerVehicle.gameObject.transform.position.y, 0);
-    }
-
-    private string GetCurrentRoomName() 
-    {
-        return SceneManager.GetSceneAt(1).name;
-    }
+    private int GetCurrentRoomIndex() => SceneManager.GetSceneAt(1).buildIndex;
+    #endregion
 }

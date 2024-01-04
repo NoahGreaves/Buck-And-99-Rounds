@@ -16,7 +16,7 @@ public class BombLauncher : MonoBehaviour
         _maxCooldown = _cooldown;
     }
 
-    public void OnUseAbility(InputAction.CallbackContext context)
+    public void OnAltFire(InputAction.CallbackContext context)
     {
         var isFiring = context.ReadValue<float>();
         _isFiring = isFiring == 1;

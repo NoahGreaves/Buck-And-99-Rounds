@@ -22,10 +22,15 @@ public class ExplodableObject : MonoBehaviour
 
     private void OnExplosion(Vector3 explosionPosition, float explosionPower, float explosionRadius, float explosionUpwardForce, float explosionDamage) 
     {
-        _RB.AddExplosionForce(explosionPower, explosionPosition, explosionRadius, explosionUpwardForce, ForceMode.Impulse);
+        double explosionDistance = (transform.position - explosionPosition).sqrMagnitude;
+        bool isInExplosionRadius = explosionDistance <= ( explosionRadius * explosionRadius );
+        bool healthIsNull = _health == null;
+        bool noDmg = explosionDamage <= 0;
 
-        if (_health == null)
-            return;
+        if (!isInExplosionRadius || healthIsNull || noDmg)
+          return;
+        
+        _RB.AddExplosionForce(explosionPower, explosionPosition, explosionRadius, explosionUpwardForce, ForceMode.Impulse);
         _health.TakeDamage(explosionDamage);
     }
 }
