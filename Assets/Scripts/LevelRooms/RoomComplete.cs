@@ -6,7 +6,8 @@ public enum RoomCollection
     HUB_ROOM,
     TEST_ROOM,
     ROOM_LEVEL_1,
-    ROOM_LEVEL_2
+    ROOM_LEVEL_2,
+    CITY
 }
 
 public class RoomComplete : MonoBehaviour

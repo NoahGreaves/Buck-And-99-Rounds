@@ -31,6 +31,9 @@ public delegate void OnExplosion(Vector3 explosionPosition, float explosionPower
 // PICKUPS
 public delegate void OnBombLauncherPickup();
 public delegate void OnForwardFacingShieldPickup();
+
+// Countdown
+public delegate void OnCountdownUpdate(int newCountdown);
    
 public static class GameEvents
 {
@@ -102,5 +105,8 @@ public static class GameEvents
     // UPDATES THE ENEMY COUNT UI
     public static event OnEnemyCountUpdate OnEnemyCountUpdate;
     public static void EnemyCountUpdate(int enemyCount) => OnEnemyCountUpdate?.Invoke(enemyCount);
+    
+    public static event OnCountdownUpdate OnCountdownUpdate;
+    public static void CountdownUpdate(int newCountdown) => OnCountdownUpdate?.Invoke(newCountdown);
     #endregion
 }

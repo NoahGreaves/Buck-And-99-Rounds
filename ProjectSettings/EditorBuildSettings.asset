@@ -20,5 +20,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Test_Level_2.unity
     guid: 46d922f24b1fa274c8e22b18d8ac7526
+  - enabled: 1
+    path: Assets/Scenes/City.unity
+    guid: 00d80fda46aa611488f11babeb2e2625
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

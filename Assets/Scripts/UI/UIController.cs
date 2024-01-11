@@ -15,6 +15,7 @@ public class UIController : MonoBehaviour
     [Space(10)]
     [Header("Level Stats")]
     [SerializeField] private TextMeshProUGUI _numOfEnemiesRemaining;
+    [SerializeField] private TextMeshProUGUI _startingCountdown;
 
     [Space(10)]
     [Header("Screens")]
@@ -56,6 +57,8 @@ public class UIController : MonoBehaviour
         GameEvents.OnPlayerFuelUpdate += UpdateFuelAmount;
 
         GameEvents.OnEnemyCountUpdate += EnemyCountUI;
+
+        GameEvents.OnCountdownUpdate += Countdown;
     }
 
     private void UnsubscribeToEvents() 
@@ -69,6 +72,8 @@ public class UIController : MonoBehaviour
         GameEvents.OnPlayerFuelUpdate -= UpdateFuelAmount;
 
         GameEvents.OnEnemyCountUpdate -= EnemyCountUI;
+
+        GameEvents.OnCountdownUpdate -= Countdown;
     }
     #endregion
 
@@ -100,6 +105,12 @@ public class UIController : MonoBehaviour
         _numOfEnemiesRemaining.text = $"Enemies: {enemyCount}";
 
         PlayerObjectiveCompleteUI();
+    }
+
+    public void SetCountdownEnabled(bool enabled) => _startingCountdown.gameObject.SetActive(enabled);
+    private void Countdown(int newTime) 
+    {
+        _startingCountdown.text = $"{newTime}";
     }
 
     // Count Total Kill Count for Play Session

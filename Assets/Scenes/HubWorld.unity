@@ -218,8 +218,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 421662347}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.00000034831464, y: 0.9914448, z: -0.13052675, w: 0.000002875924}
-  m_LocalPosition: {x: -2, y: 0.68, z: -35.77}
+  m_LocalRotation: {x: 0.00000034831467, y: 0.9914448, z: -0.13052674, w: 0.0000028759239}
+  m_LocalPosition: {x: -2, y: 0.68, z: -45.77}
   m_LocalScale: {x: 4, y: 1, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -713,8 +713,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Start Rooms
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: ab8ba79f2a823ab4ba957b9af8cdd9e5, type: 2}
+  m_sharedMaterial: {fileID: 7944425845303072904, guid: ab8ba79f2a823ab4ba957b9af8cdd9e5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -886,8 +886,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1064499747}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.092296414, y: -0.701057, z: -0.09229636, w: 0.7010577}
-  m_LocalPosition: {x: 0.02, y: 0.68, z: -22.28}
+  m_LocalRotation: {x: 0.09229644, y: -0.701057, z: -0.09229637, w: 0.7010577}
+  m_LocalPosition: {x: 7.77, y: 0.68, z: -22.28}
   m_LocalScale: {x: 4, y: 1, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1846,7 +1846,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13a79bf1a8c5abb4eaeada87ba14408c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _timer: 3
 --- !u!1 &1733278740
 GameObject:
   m_ObjectHideFlags: 0
@@ -1946,7 +1945,7 @@ Transform:
   m_GameObject: {fileID: 1733278740}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -57.388283}
+  m_LocalPosition: {x: 0, y: 0, z: -67.38828}
   m_LocalScale: {x: 50, y: 1, z: 50}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1962,7 +1961,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1391340298485859131, guid: 3212514938641f041a914c8fd464e6dc, type: 3}
       propertyPath: _roomCollection
-      value: 2
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2835229245018176193, guid: 3212514938641f041a914c8fd464e6dc, type: 3}
       propertyPath: m_Name
