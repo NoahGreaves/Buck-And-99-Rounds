@@ -32,6 +32,13 @@ public class Vehicle : MonoBehaviour
         _playerRB.position = position;
     }
 
+    public void SetPositionAndRotation(Vector3 position, Vector3 forward)
+    {
+        _playerRB.position = position;
+        _playerRB.transform.forward = forward;
+        Player.Model.transform.forward = forward;
+    }
+
     public void SetVelocity(Vector3 velocity)
     {
         _playerRB.velocity = velocity;

@@ -10,16 +10,21 @@ public class PlayerPickupManager : MonoBehaviour
     [Header("Forward Facing Shield")]
     [SerializeField] private GameObject _forwardShield;
 
+    [Header("Mine Dropper")]
+    [SerializeField] private GameObject _mineDropper;
+
     private void Start()
     {
         GameEvents.OnBombLauncherPickup += OnBombLauncherPickup;
         GameEvents.OnForwardFacingShieldPickup += OnForwardFacingShieldPickup;
+        GameEvents.OnMineDropperPickup += OnMineDropperPickup;
     }
 
     private void OnDisable()
     {
         GameEvents.OnBombLauncherPickup -= OnBombLauncherPickup;
         GameEvents.OnForwardFacingShieldPickup -= OnForwardFacingShieldPickup;
+        GameEvents.OnMineDropperPickup -= OnMineDropperPickup;
     }
 
     private void OnBombLauncherPickup()
@@ -34,5 +39,12 @@ public class PlayerPickupManager : MonoBehaviour
         if (_forwardShield == null)
             return;
         _forwardShield.SetActive(true);
+    }
+
+    private void OnMineDropperPickup() 
+    {
+        if (_mineDropper == null)
+            return;
+        _mineDropper.SetActive(true);
     }
 }

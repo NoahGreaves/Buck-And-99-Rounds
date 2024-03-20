@@ -31,6 +31,7 @@ public delegate void OnExplosion(Vector3 explosionPosition, float explosionPower
 // PICKUPS
 public delegate void OnBombLauncherPickup();
 public delegate void OnForwardFacingShieldPickup();
+public delegate void OnMineDropperPickup();
 
 // Countdown
 public delegate void OnCountdownUpdate(int newCountdown);
@@ -99,6 +100,9 @@ public static class GameEvents
 
     public static event OnForwardFacingShieldPickup OnForwardFacingShieldPickup;
     public static void ForwardFacingShieldPickup() => OnForwardFacingShieldPickup?.Invoke();
+    
+    public static event OnMineDropperPickup OnMineDropperPickup;
+    public static void MineDropperPickup() => OnMineDropperPickup?.Invoke();
     #endregion
 
     #region UI UPDATES

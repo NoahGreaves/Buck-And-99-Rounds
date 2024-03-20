@@ -22,8 +22,6 @@ public class UIController : MonoBehaviour
     [SerializeField] private GameObject _gameOverScreen;
     [SerializeField] private GameObject _debugScreen;
 
-    private const float METERS_PER_SECOND_TO_KILOMETERS_PER_HOUR = 3.6f;
-
     /// <summary>
     /// MAKE A DEBUG MENU
     /// </summary>
@@ -89,7 +87,6 @@ public class UIController : MonoBehaviour
 
     private void UpdateVelocityUI(float newVelocity)
     {
-        newVelocity /= METERS_PER_SECOND_TO_KILOMETERS_PER_HOUR; // converts from m/s to km/hr
         _playerVelocity.text = $"{(int)newVelocity}km/hr";
     }
 

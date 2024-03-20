@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Vehicle")]
     [SerializeField] private GameObject _model;
     [SerializeField] private float _moveSpeed = 50f;
+    [SerializeField] private float _maxSpeed = 200f;
 
     [Header("Boost")]
     [SerializeField] private float _boostIntesity = 5f;
@@ -32,6 +33,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Awake()
     {
+        Player.Model = _model;
         _rb = gameObject.GetComponentInChildren<Rigidbody>();
         _playerFuel = GetComponent<Fuel>();
 
@@ -104,8 +106,11 @@ public class PlayerMovement : MonoBehaviour
         Vector3 moveForce = speed * moveInput * _model.transform.forward;
         _rb.AddForce(moveForce, ForceMode.Acceleration);
 
-        // Check if player is moving ( Units: km/hr )
-        Player.IsMoving = (int)_rb.velocity.sqrMagnitude / 3.6 > 0;
+        if (_rb.velocity.sqrMagnitude > _maxSpeed)
+            _rb.velocity *= 0.99f;
+     
+        // Check if player is moving
+        Player.IsMoving = _rb.velocity.sqrMagnitude > 0f;
     }
 
     private void BoostAfterTurn()

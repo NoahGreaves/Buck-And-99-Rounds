@@ -11,6 +11,7 @@ public class FollowTarget : MonoBehaviour
 
     // MAKE A VEHCILE SCRIPT
     [SerializeField] private GameObject _currentVehicle;
+    [SerializeField] private GameObject _currentVehicleModel;
 
     // GET GUN PROGRAMATICALLY
     [SerializeField] private GameObject _currentWeapon;
@@ -31,8 +32,9 @@ public class FollowTarget : MonoBehaviour
 
     private void CameraRotation()
     {
-        var lookAngle = Quaternion.AngleAxis(_lookInput.x * _cameraSensitivity, Vector3.up);
-        transform.rotation *= lookAngle;
-        _currentWeapon.transform.rotation *= lookAngle;
+        //var lookAngle = Quaternion.AngleAxis(_lookInput.x * _cameraSensitivity, Vector3.up);
+        //transform.rotation *= lookAngle;
+        //_currentWeapon.transform.rotation *= lookAngle;
+        transform.forward = _currentVehicleModel.transform.forward;
     }
 }

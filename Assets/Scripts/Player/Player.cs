@@ -6,6 +6,8 @@ public static class Player
 {
     public static int LAYER = 3;
 
+    public static GameObject Model = null;
+
     public static Health Health = null;
 
     public static bool CanSpeedKill = false;

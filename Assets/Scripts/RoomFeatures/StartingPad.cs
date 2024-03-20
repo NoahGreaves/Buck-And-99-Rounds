@@ -12,6 +12,6 @@ public class StartingPad : MonoBehaviour
     private void SetPlayerPosition()
     {
         Player.CurrentPlayerVehicle.SetVelocity(Vector3.zero);
-        Player.CurrentPlayerVehicle.SetPosition(transform.position);
+        Player.CurrentPlayerVehicle.SetPositionAndRotation(transform.position, transform.forward);
     }
 }
