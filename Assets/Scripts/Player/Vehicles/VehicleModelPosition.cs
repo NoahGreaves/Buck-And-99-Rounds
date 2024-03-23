@@ -7,6 +7,7 @@ public class VehicleModelPosition : MonoBehaviour
 {
     [SerializeField] private GameObject _playerCar;
     [SerializeField] private float _turnSpeed = 30f;
+    [SerializeField] private float _positionOffset= -1f;
 
     private Vector2 _rotationInput;
 
@@ -20,7 +21,7 @@ public class VehicleModelPosition : MonoBehaviour
     private void Update()
     {
         SetRotation();
-        var newPos = new Vector3(_playerCar.transform.position.x, _playerCar.transform.position.y - 0.75f, _playerCar.transform.position.z);
+        var newPos = new Vector3(_playerCar.transform.position.x, _playerCar.transform.position.y - 0.75f, _playerCar.transform.position.z /*+ _positionOffset*/);
         transform.position = newPos;
     }
 

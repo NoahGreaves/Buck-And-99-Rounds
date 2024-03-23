@@ -10,6 +10,7 @@ public class UIController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _playerHealth;
     [SerializeField] private TextMeshProUGUI _playerLives;
     [SerializeField] private TextMeshProUGUI _playerFuel;
+    [SerializeField] private Image _playerBoostFilled;
     [SerializeField] private Slider _fuelSlider; 
 
     [Space(10)]
@@ -22,6 +23,8 @@ public class UIController : MonoBehaviour
     [SerializeField] private GameObject _gameOverScreen;
     [SerializeField] private GameObject _debugScreen;
 
+
+    private float _totalPlayerBoost;
     /// <summary>
     /// MAKE A DEBUG MENU
     /// </summary>
@@ -30,6 +33,10 @@ public class UIController : MonoBehaviour
     {
         SubscribeToEvents();
         UpdatePlayerLivesUI(Player.NumOfLives);
+
+        // Set Player boost slider to 0
+        _playerBoostFilled.fillAmount = 0f;
+        _totalPlayerBoost = Player.TotalBoostAmount;
     }
 
     private void Start()
@@ -53,6 +60,7 @@ public class UIController : MonoBehaviour
         GameEvents.OnPlayerElimination += PlayerEliminationUI;
         GameEvents.OnPlayerVelocityUpdate += UpdateVelocityUI;
         GameEvents.OnPlayerFuelUpdate += UpdateFuelAmount;
+        GameEvents.OnPlayerBoostChange += UpdateBoostAmount;
 
         GameEvents.OnEnemyCountUpdate += EnemyCountUI;
 
@@ -68,6 +76,7 @@ public class UIController : MonoBehaviour
         GameEvents.OnPlayerElimination -= PlayerEliminationUI;
         GameEvents.OnPlayerVelocityUpdate -= UpdateVelocityUI;
         GameEvents.OnPlayerFuelUpdate -= UpdateFuelAmount;
+        GameEvents.OnPlayerBoostChange -= UpdateBoostAmount;
 
         GameEvents.OnEnemyCountUpdate -= EnemyCountUI;
 
@@ -94,6 +103,14 @@ public class UIController : MonoBehaviour
     {
         _playerFuel.text = $"Fuel: {(int)fuelAmount}";
         _fuelSlider.value = fuelAmount;
+    }
+
+    private void UpdateBoostAmount(float boostAmount)
+    {
+        // (value / total value)×100 %.
+        //float totalBoost = Player.TotalBoostAmount;
+        float boostPerc = boostAmount / _totalPlayerBoost;
+        _playerBoostFilled.fillAmount = boostPerc;
     }
 
     // Count Enemies in Current Level

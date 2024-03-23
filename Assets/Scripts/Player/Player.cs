@@ -6,6 +6,8 @@ public static class Player
 {
     public static int LAYER = 3;
 
+    public static float TotalBoostAmount = 0f;
+
     public static GameObject Model = null;
 
     public static Health Health = null;

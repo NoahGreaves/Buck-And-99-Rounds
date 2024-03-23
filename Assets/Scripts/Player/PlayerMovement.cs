@@ -10,9 +10,12 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float _maxSpeed = 200f;
 
     [Header("Boost")]
-    [SerializeField] private float _boostIntesity = 5f;
+    [SerializeField] private float _boostAmount = 5f;
     [SerializeField] private float _boostIncrement = 0.95f;
     [SerializeField] private float _boostFactor = 1f;
+
+    [Header("Gravity")]
+    [SerializeField] private float _fallModifier = 2.5f;
 
     // Thresholds
     [Space(10)]
@@ -26,7 +29,7 @@ public class PlayerMovement : MonoBehaviour
     private Fuel _playerFuel;
 
     private bool _grounded;
-    private const float GROUND_CHECK_DISTANCE = 1f;
+    [SerializeField] private float GROUND_CHECK_DISTANCE = 1f;
 
     private bool _canPlayerSpeedKill = false;
     public bool CanPlayerSpeedKill { get => _canPlayerSpeedKill; }
@@ -34,6 +37,7 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
     {
         Player.Model = _model;
+        Player.TotalBoostAmount = _boostAmount;
         _rb = gameObject.GetComponentInChildren<Rigidbody>();
         _playerFuel = GetComponent<Fuel>();
 
@@ -58,11 +62,17 @@ public class PlayerMovement : MonoBehaviour
             _playerFuel.enabled = !_playerFuel.enabled;
         }
 
+        if (_rb.velocity.y < 0)
+        {
+            _rb.AddForce(Physics.gravity * (_fallModifier) * Time.deltaTime);
+        }
+
         // Checks if player is on the ground
         _grounded = IsGrounded(out RaycastHit hit);
-        Debug.DrawLine(_model.transform.position, hit.normal);
-        Player.GroundNormal = hit.normal;
+        Debug.DrawLine(_model.transform.position, _model.transform.up * (-GROUND_CHECK_DISTANCE), Color.green);
+        //Player.GroundNormal = hit.normal;
         Player.IsGrounded = _grounded;
+
         if (_grounded)
         {
             //var target = new Vector3(hit.normal.x, _model.transform.rotation.y, hit.normal.z);
@@ -90,7 +100,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void OnBoost(InputAction.CallbackContext context)
     {
-        Boost();
+        //Boost();
     }
 
     #endregion
@@ -108,7 +118,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (_rb.velocity.sqrMagnitude > _maxSpeed)
             _rb.velocity *= 0.99f;
-     
+
         // Check if player is moving
         Player.IsMoving = _rb.velocity.sqrMagnitude > 0f;
     }
@@ -120,13 +130,16 @@ public class PlayerMovement : MonoBehaviour
         if (!isTurning)
         {
             // boost player in forward direction after the turn is complete 
-            _rb.AddForce(_boostFactor * _moveInput.y * _model.transform.forward, ForceMode.Impulse);
+
+            var boostAmount = _boostFactor * _moveInput.y * _model.transform.forward;
+            _rb.AddForce(boostAmount, ForceMode.Impulse);
             _boostFactor = 0f;
+            GameEvents.PlayerBoostChange(_boostFactor);
         }
         if (isTurning)
         {
-            _boostFactor = Mathf.Lerp(_boostFactor, _boostIntesity, _boostIncrement * Time.deltaTime);
-
+            _boostFactor = Mathf.Lerp(_boostFactor, _boostAmount, _boostIncrement * Time.deltaTime);
+            GameEvents.PlayerBoostChange(_boostFactor);
         }
     }
 
@@ -140,24 +153,20 @@ public class PlayerMovement : MonoBehaviour
 
     private bool IsGrounded(out RaycastHit hit)
     {
-        //bool rayHitGround = Physics.Raycast(RB.transform.position, transform.TransformDirection(Vector3.down) * _groundCheckDistance, out hit, _groundMask);
         bool rayHitGround = Physics.Raycast(_model.transform.position, _model.transform.TransformDirection(Vector3.down) * GROUND_CHECK_DISTANCE, out hit, _groundMask);
         if (rayHitGround)
             return true;
         else
             return false;
+        //return Physics.Raycast(transform.position, -Vector3.up, distToGround + 0.1, (int)_groundMask);
+        //distToGround = GetComponent<Collider>().bounds.extents.y;
+        //return Physics.Raycast(transform.position, -Vector3.up, GROUND_CHECK_DISTANCE, (int)_groundMask);
     }
 
     private void CheckPlayerCanKillWithSpeed()
     {
         bool canPlayerSpeedKill = CheckVelocity(_minSpeedToKill);
         Player.CanSpeedKill = canPlayerSpeedKill;
-    }
-
-    private void Boost()
-    {
-        // fix boost lol
-        _moveSpeed *= 2;
     }
 
     private bool CheckVelocity(float velocityToCompare)
@@ -168,7 +177,7 @@ public class PlayerMovement : MonoBehaviour
         return false;
     }
 
-    public void SetPlayerPosition(Vector3 newPosition) 
+    public void SetPlayerPosition(Vector3 newPosition)
     {
         _rb.position = newPosition;
     }

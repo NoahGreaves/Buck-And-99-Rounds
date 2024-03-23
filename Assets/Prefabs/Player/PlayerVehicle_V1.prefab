@@ -622,7 +622,7 @@ MonoBehaviour:
   _model: {fileID: 5040184001581289493}
   _moveSpeed: 25
   _maxSpeed: 200
-  _boostIntesity: 15
+  _boostAmount: 15
   _boostIncrement: 1.5
   _boostFactor: 1
   _minSpeedToKill: 5
@@ -681,6 +681,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _bombLauncher: {fileID: 1898665968820329440}
   _forwardShield: {fileID: 0}
+  _mineDropper: {fileID: 0}
 --- !u!1 &1898665968820329440
 GameObject:
   m_ObjectHideFlags: 0
@@ -1170,7 +1171,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6f195dcf2df40be4ba52c81983bed007, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6f195dcf2df40be4ba52c81983bed007, type: 3}
       propertyPath: m_LocalRotation.y
@@ -1178,7 +1179,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6f195dcf2df40be4ba52c81983bed007, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6f195dcf2df40be4ba52c81983bed007, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1379,6 +1380,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerCar: {fileID: 487911609720881599}
   _turnSpeed: 120
+  _positionOffset: -1
 --- !u!4 &5672710382564428463 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6f195dcf2df40be4ba52c81983bed007, type: 3}
