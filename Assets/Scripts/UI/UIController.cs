@@ -107,9 +107,12 @@ public class UIController : MonoBehaviour
 
     private void UpdateBoostAmount(float boostAmount)
     {
-        // (value / total value)×100 %.
-        //float totalBoost = Player.TotalBoostAmount;
         float boostPerc = boostAmount / _totalPlayerBoost;
+        if (boostPerc > 0.990f)
+        {
+            boostPerc = Mathf.Ceil(boostPerc);
+        }
+
         _playerBoostFilled.fillAmount = boostPerc;
     }
 
