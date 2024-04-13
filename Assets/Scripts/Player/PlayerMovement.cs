@@ -95,6 +95,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         _moveInput = context.ReadValue<Vector2>();
+        //print(_moveInput);
         SetFuelUsage();
     }
 

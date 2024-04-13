@@ -68,6 +68,6 @@ public class GameManager : MonoBehaviour
         GameEvents.RoomReset();
     }
 
-    private int GetCurrentRoomIndex() => SceneManager.GetSceneAt(1).buildIndex;
+    public static int GetCurrentRoomIndex() => SceneManager.GetSceneAt(1).buildIndex;
     #endregion
 }

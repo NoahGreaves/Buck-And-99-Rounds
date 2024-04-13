@@ -18,6 +18,11 @@ public delegate void OnGetObjectives(ObjectiveType objectiveType);
 public delegate void OnRoomObjectivesComplete();
 public delegate void OnAlertRoomObjectiveComplete();
 
+public delegate void OnTimeTrialTimerStart();
+public delegate void OnTimeTrialTimerEnd();
+
+public delegate void OnLapCountUpdate(int newCount);
+
 // ROOMS MANAGEMENT
 public delegate void OnRoomProgression(RoomCollection roomCollection);
 public delegate void OnRoomReset();
@@ -36,7 +41,8 @@ public delegate void OnMineDropperPickup();
 
 // Countdown
 public delegate void OnCountdownUpdate(int newCountdown);
-   
+public delegate void OnTimeTrialTimerUpdate(float newTime);   
+
 public static class GameEvents
 {
     #region PLAYER
@@ -76,10 +82,19 @@ public static class GameEvents
     public static void GetObjectives(ObjectiveType objectiveType) => OnGetObjectives?.Invoke(objectiveType);
 
     public static event OnRoomObjectivesComplete OnRoomObjectivesComplete;
-    public static void RoomObjectivesComplete() => OnRoomObjectivesComplete.Invoke();
+    public static void RoomObjectivesComplete() => OnRoomObjectivesComplete?.Invoke();
 
     public static event OnAlertRoomObjectiveComplete OnAlertRoomObjectiveComplete;
-    public static void AlertRoomObjectiveComplete() => OnAlertRoomObjectiveComplete.Invoke();
+    public static void AlertRoomObjectiveComplete() => OnAlertRoomObjectiveComplete?.Invoke();
+    
+    public static event OnTimeTrialTimerStart OnTimeTrialTimerStart;
+    public static void TimeTrialTimerStart() => OnTimeTrialTimerStart?.Invoke();
+
+    public static event OnTimeTrialTimerEnd OnTimeTrialTimerEnd;
+    public static void TimeTrialTimerEnd() => OnTimeTrialTimerEnd?.Invoke();
+
+    public static event OnLapCountUpdate OnLapCountUpdate;
+    public static void LapCountUpdate(int newCount) => OnLapCountUpdate?.Invoke(newCount);
     #endregion
 
     #region ROOM MANAGEMENT
@@ -116,5 +131,8 @@ public static class GameEvents
     
     public static event OnCountdownUpdate OnCountdownUpdate;
     public static void CountdownUpdate(int newCountdown) => OnCountdownUpdate?.Invoke(newCountdown);
+
+    public static event OnTimeTrialTimerUpdate OnTimeTrialUpdate;
+    public static void TimeTrialTimerUpdate(float newTime) => OnTimeTrialUpdate?.Invoke(newTime);
     #endregion
 }

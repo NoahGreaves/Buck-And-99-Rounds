@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,14 +18,16 @@ public class UIController : MonoBehaviour
     [Header("Level Stats")]
     [SerializeField] private TextMeshProUGUI _numOfEnemiesRemaining;
     [SerializeField] private TextMeshProUGUI _startingCountdown;
+    [SerializeField] private TextMeshProUGUI _timeTrialTimerText;
+    [SerializeField] private TextMeshProUGUI _lapCountText;
 
     [Space(10)]
     [Header("Screens")]
     [SerializeField] private GameObject _gameOverScreen;
     [SerializeField] private GameObject _debugScreen;
 
-
     private float _totalPlayerBoost;
+
     /// <summary>
     /// MAKE A DEBUG MENU
     /// </summary>
@@ -65,6 +68,8 @@ public class UIController : MonoBehaviour
         GameEvents.OnEnemyCountUpdate += EnemyCountUI;
 
         GameEvents.OnCountdownUpdate += Countdown;
+
+        GameEvents.OnLapCountUpdate += UpdateLapCount;
     }
 
     private void UnsubscribeToEvents() 
@@ -81,6 +86,8 @@ public class UIController : MonoBehaviour
         GameEvents.OnEnemyCountUpdate -= EnemyCountUI;
 
         GameEvents.OnCountdownUpdate -= Countdown;
+
+        GameEvents.OnLapCountUpdate -= UpdateLapCount;
     }
     #endregion
 
@@ -109,11 +116,26 @@ public class UIController : MonoBehaviour
     {
         float boostPerc = boostAmount / _totalPlayerBoost;
         if (boostPerc > 0.990f)
-        {
             boostPerc = Mathf.Ceil(boostPerc);
-        }
 
         _playerBoostFilled.fillAmount = boostPerc;
+    }
+
+    public void UpdateTimeTrialTimer(float newTime)
+    {        
+        float mins = Mathf.FloorToInt(newTime / 60f);
+        float secs = Mathf.FloorToInt(newTime % 60);
+        float centiSeconds = Mathf.FloorToInt((newTime % 1f) * 100);
+
+        string time = $"{mins:00}:{secs:00}.{centiSeconds:00}";
+
+        _timeTrialTimerText.text = $"{time}";
+    }
+
+    private void UpdateLapCount(int newCount)
+    {
+        newCount += 1;
+        _lapCountText.text = $"Lap {newCount}/";
     }
 
     // Count Enemies in Current Level
@@ -127,7 +149,8 @@ public class UIController : MonoBehaviour
     public void SetCountdownEnabled(bool enabled) => _startingCountdown.gameObject.SetActive(enabled);
     private void Countdown(int newTime) 
     {
-        _startingCountdown.text = $"{newTime}";
+        float time = Mathf.FloorToInt(newTime);
+        _startingCountdown.text = $"{time}";
     }
 
     // Count Total Kill Count for Play Session

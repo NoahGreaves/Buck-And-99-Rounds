@@ -15,10 +15,13 @@ public class RoomComplete : MonoBehaviour
     [SerializeField] private RoomCollection _roomCollection;
     [SerializeField] private bool _isVisible = false;
 
+    [SerializeField] private int _numOfLaps = 3;
+
     private Collider _trigger;
     private MeshRenderer _renderer;
 
     private bool _hasPlayerEntered = false;
+    private int _currentNumOfLaps = 0;
 
     private void Start()
     {
@@ -45,7 +48,23 @@ public class RoomComplete : MonoBehaviour
             return;
 
         _hasPlayerEntered = true;
+        _currentNumOfLaps += 1;
+        if (_currentNumOfLaps != _numOfLaps)
+        {
+            GameEvents.LapCountUpdate(_currentNumOfLaps);
+            return;
+        }
+
+        GameEvents.TimeTrialTimerEnd();
         GameEvents.RoomProgression(_roomCollection);
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (!_hasPlayerEntered && other.gameObject.layer != Player.LAYER)
+            return;
+
+        _hasPlayerEntered = false;
     }
 
     private void RoomCompleted()

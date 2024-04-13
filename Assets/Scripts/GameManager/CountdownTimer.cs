@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RoomStartTimer : MonoBehaviour
+public class CountdownTimer : MonoBehaviour
 {
     [SerializeField] private float _timer = 3f;
     [SerializeField] private UIController _uiController;
@@ -13,7 +13,6 @@ public class RoomStartTimer : MonoBehaviour
     private void Awake()
     {
         _currentTimer = _timer;
-
         GameEvents.OnRoomLoad += OnRoomLoad;
     }
 
@@ -49,6 +48,16 @@ public class RoomStartTimer : MonoBehaviour
         _startTimer = false;
         Player.CanMove = true;
         _uiController.SetCountdownEnabled(false);
+
+        // IF PLAYER IS IN THE HUB WORLD, DO NOT START TIMER
+        var roomIndex = GameManager.GetCurrentRoomIndex();
+        if (roomIndex != (int)RoomCollection.HUB_ROOM) 
+        {
+            GameEvents.TimeTrialTimerStart();
+            StopCoroutine(StartTimer());
+            yield return null;
+        }
+
         StopCoroutine(StartTimer());
         yield return null;
     }
