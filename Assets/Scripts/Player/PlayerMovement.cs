@@ -3,11 +3,14 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [SerializeField] private bool _enableBoostAfterTurn = true;
+
     // Vehicle Values
     [Header("Vehicle")]
     [SerializeField] private GameObject _model;
     [SerializeField] private float _moveSpeed = 50f;
     [SerializeField] private float _maxSpeed = 200f;
+    [SerializeField] private float _turnSpeedMultiplier = 1.5f;
 
     [Header("Boost")]
     [SerializeField] private float _boostAmount = 5f;
@@ -21,6 +24,8 @@ public class PlayerMovement : MonoBehaviour
     [Space(10)]
     [Header("Player Movement Thresholds")]
     [SerializeField] private float _minSpeedToKill = 25f;
+
+    private PlayerInputActions _playerInputActions;
 
     // Engine Rigidbody -> Gets detached and is controlled while the vehicle art is set to this objects position each frame
     private Rigidbody _rb;
@@ -38,11 +43,36 @@ public class PlayerMovement : MonoBehaviour
     {
         Player.Model = _model;
         Player.TotalBoostAmount = _boostAmount;
+
+        _playerInputActions = new PlayerInputActions();
+
         _rb = gameObject.GetComponentInChildren<Rigidbody>();
         _playerFuel = GetComponent<Fuel>();
 
         // detach rb from parent
         // RB.transform.parent = null;
+    }
+
+    private void OnEnable()
+    {
+        _playerInputActions.Player.Controller_Move_Forward.performed += ControllerOnMove;
+        _playerInputActions.Player.Controller_Move_Forward.canceled += ControllerOnMoveCanceled;
+        _playerInputActions.Player.Controller_Move_Forward.Enable();
+        
+        _playerInputActions.Player.Controller_Move_Backwards.performed += ControllerOnReverse;
+        _playerInputActions.Player.Controller_Move_Backwards.canceled += ControllerOnMoveCanceled;
+        _playerInputActions.Player.Controller_Move_Backwards.Enable();
+    }
+
+    private void OnDisable()
+    {
+        _playerInputActions.Player.Controller_Move_Forward.performed -= ControllerOnMove;
+        _playerInputActions.Player.Controller_Move_Forward.canceled -= ControllerOnMoveCanceled;
+        _playerInputActions.Player.Controller_Move_Forward.Disable();
+
+        _playerInputActions.Player.Controller_Move_Backwards.performed -= ControllerOnReverse;
+        _playerInputActions.Player.Controller_Move_Backwards.canceled -= ControllerOnMoveCanceled;
+        _playerInputActions.Player.Controller_Move_Backwards.Disable();
     }
 
     private void Update()
@@ -54,7 +84,9 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         MovePlayer();
-        BoostAfterTurn();
+
+        if (_enableBoostAfterTurn)
+            BoostAfterTurn();
 
         // REMOVE AND MAKE THIS PART OF A DEBUG MENU 
         if (Input.GetKeyDown(KeyCode.Alpha0))
@@ -64,12 +96,12 @@ public class PlayerMovement : MonoBehaviour
 
         if (_rb.velocity.y < 0)
         {
-            _rb.AddForce(Physics.gravity * (_fallModifier) * Time.deltaTime);
+            _rb.AddForce((_fallModifier) * Time.deltaTime * Physics.gravity);
         }
 
         // Checks if player is on the ground
         _grounded = IsGrounded(out RaycastHit hit);
-        Debug.DrawLine(_model.transform.position, _model.transform.up * (-GROUND_CHECK_DISTANCE), Color.green);
+        //Debug.DrawLine(_model.transform.position, _model.transform.up * (-GROUND_CHECK_DISTANCE), Color.green);
         //Player.GroundNormal = hit.normal;
         Player.IsGrounded = _grounded;
 
@@ -94,9 +126,24 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        _moveInput = context.ReadValue<Vector2>();
-        //print(_moveInput);
+       _moveInput = context.ReadValue<Vector2>();
+
         SetFuelUsage();
+    }
+
+    public void ControllerOnMove(InputAction.CallbackContext context)
+    {
+        _moveInput = new Vector2(0f, 1f);
+    }
+
+    public void ControllerOnReverse(InputAction.CallbackContext context) 
+    {
+        _moveInput = new Vector2(0f, -1f);
+    }
+
+    public void ControllerOnMoveCanceled(InputAction.CallbackContext context)
+    {
+        _moveInput = new Vector2(0f, 0f);    
     }
 
     public void OnBoost(InputAction.CallbackContext context)
@@ -109,16 +156,23 @@ public class PlayerMovement : MonoBehaviour
     private void MovePlayer()
     {
         var speed = _moveInput.y < 0 ? _moveSpeed * 0.5f : _moveSpeed;
-
-        // Get the input for car movement.
-        float moveInput = _moveInput.y;
+        
+        // Get the forward movement input for car 
+        float moveForwardInput = _moveInput.y;
 
         // Apply forces to simulate car movement.
-        Vector3 moveForce = speed * moveInput * _model.transform.forward;
+        Vector3 moveForce = speed * moveForwardInput * _model.transform.forward;
         _rb.AddForce(moveForce, ForceMode.Acceleration);
 
         if (_rb.velocity.sqrMagnitude > _maxSpeed)
             _rb.velocity *= 0.99f;
+
+
+        if (Mathf.Abs(_moveInput.x) > 0 && _moveInput.y != 0)
+        {
+            Vector3 turnSpeed = _model.transform.forward * speed * _turnSpeedMultiplier * Mathf.Abs(_moveInput.x);
+            _rb.AddForce(turnSpeed);
+        }
 
         // Check if player is moving
         Player.IsMoving = _rb.velocity.sqrMagnitude > 0f;
@@ -131,17 +185,14 @@ public class PlayerMovement : MonoBehaviour
         if (!isTurning)
         {
             // boost player in forward direction after the turn is complete 
-
             var boostAmount = _boostFactor * _moveInput.y * _model.transform.forward;
             _rb.AddForce(boostAmount, ForceMode.Impulse);
             _boostFactor = 0f;
             GameEvents.PlayerBoostChange(_boostFactor);
         }
-        if (isTurning)
-        {
-            _boostFactor = Mathf.Lerp(_boostFactor, _boostAmount, _boostIncrement * Time.deltaTime);
-            GameEvents.PlayerBoostChange(_boostFactor);
-        }
+
+        _boostFactor = Mathf.Lerp(_boostFactor, _boostAmount, _boostIncrement * Time.deltaTime);
+        GameEvents.PlayerBoostChange(_boostFactor);
     }
 
     private void SetFuelUsage()

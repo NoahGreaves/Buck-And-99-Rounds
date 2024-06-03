@@ -47,7 +47,6 @@ public class GameManager : MonoBehaviour
 
         SceneManager.LoadScene(_currentRoomIndex, LoadSceneMode.Additive);
         GameEvents.RoomLoad();
-
     }
 
     public void RestartRoom()

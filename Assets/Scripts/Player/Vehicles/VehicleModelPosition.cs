@@ -7,21 +7,36 @@ public class VehicleModelPosition : MonoBehaviour
 {
     [SerializeField] private GameObject _playerCar;
     [SerializeField] private float _turnSpeed = 30f;
-    [SerializeField] private float _positionOffset= -1f;
+    [SerializeField] private float _positionOffset = -1f;
 
+    private PlayerInputActions _playerInputActions;
     private Vector2 _rotationInput;
+    
+    private float _yOffset = 0.75f;
 
     private float _groundCheckDistance = 1f;
 
-    private void Start()
+    private void Awake()
     {
-        //transform.parent = null;
+        _playerInputActions = new PlayerInputActions();
+    }
+
+    private void OnEnable()
+    {
+        _playerInputActions.Player.Controller_Steer.performed += OnRotation;
+        _playerInputActions.Player.Controller_Steer.Enable();
+    }
+
+    private void OnDisable()
+    {
+        _playerInputActions.Player.Controller_Steer.performed -= OnRotation;
+        _playerInputActions.Player.Controller_Steer.Disable();
     }
 
     private void Update()
     {
         SetRotation();
-        var newPos = new Vector3(_playerCar.transform.position.x, _playerCar.transform.position.y - 0.75f, _playerCar.transform.position.z /*+ _positionOffset*/);
+        var newPos = new Vector3(_playerCar.transform.position.x, _playerCar.transform.position.y - _yOffset, _playerCar.transform.position.z /*+ _positionOffset*/);
         transform.position = newPos;
     }
 

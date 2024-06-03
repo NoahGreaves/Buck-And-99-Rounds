@@ -39,9 +39,14 @@ public delegate void OnBombLauncherPickup();
 public delegate void OnForwardFacingShieldPickup();
 public delegate void OnMineDropperPickup();
 
-// Countdown
+// Timers
 public delegate void OnCountdownUpdate(int newCountdown);
-public delegate void OnTimeTrialTimerUpdate(float newTime);   
+public delegate void OnTimeTrialTimerUpdate(float newTime);
+public delegate void OnGetCurrentLapTime(int currentLap);
+public delegate void OnGetCurrentTrackTime();
+
+// Screens
+public delegate void OnSetLeaderboardStatus(bool isActive);
 
 public static class GameEvents
 {
@@ -108,12 +113,12 @@ public static class GameEvents
     public static void RoomLoad() => OnRoomLoad?.Invoke();
     #endregion
 
-    #region ITEM
+    #region ITEMS
     public static event OnExplosion OnExplosion;
     public static void Explosion(Vector3 explosionPosition, float explosionPower, float explosionRadius, float explosionUpwardForce, float explosionDamage) => OnExplosion?.Invoke(explosionPosition, explosionPower, explosionRadius, explosionUpwardForce, explosionDamage);
     #endregion
 
-    #region PICKUP
+    #region PICKUPS
     public static event OnBombLauncherPickup OnBombLauncherPickup;
     public static void BombLauncherPickup() => OnBombLauncherPickup?.Invoke();
 
@@ -134,5 +139,16 @@ public static class GameEvents
 
     public static event OnTimeTrialTimerUpdate OnTimeTrialUpdate;
     public static void TimeTrialTimerUpdate(float newTime) => OnTimeTrialUpdate?.Invoke(newTime);
+
+    public static event OnSetLeaderboardStatus OnSetLeaderboardStatus;
+    public static void SetLeaderboardStatus(bool isActive) => OnSetLeaderboardStatus?.Invoke(isActive);
+    #endregion
+
+    #region Timer
+    public static event OnGetCurrentLapTime OnGetCurrentLapTime;
+    public static void GetCurrentLapTime(int currentLap) => OnGetCurrentLapTime?.Invoke(currentLap);
+
+    public static event OnGetCurrentTrackTime OnGetCurrentTrackTime;
+    public static void GetCurrentTrackTime() => OnGetCurrentTrackTime?.Invoke();
     #endregion
 }

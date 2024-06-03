@@ -1,29 +1,31 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TimeTrialsTimer : MonoBehaviour
 {
-    [SerializeField] private UIController uiController;
+    [SerializeField] private UIController _uiController;
 
     private bool _countTime = false;
-
     private float _currentTime = 0f;
-    private float _finalTime;
     
     private void Start()
     {
         GameEvents.OnTimeTrialTimerStart += StartTimer;
         GameEvents.OnTimeTrialTimerEnd += EndTimer;
 
+        GameEvents.OnGetCurrentLapTime += SetPlayerLapTime;
+        GameEvents.OnGetCurrentTrackTime += SetPlayerTrackTime;
+
         // Set initial time 00:00:00
-        uiController.UpdateTimeTrialTimer(_currentTime);
+        _uiController.UpdateTimeTrialTimer(_currentTime);
     }
 
     private void OnDisable()
     {
         GameEvents.OnTimeTrialTimerStart -= StartTimer;   
-        GameEvents.OnTimeTrialTimerEnd -= EndTimer;   
+        GameEvents.OnTimeTrialTimerEnd -= EndTimer;
+
+        GameEvents.OnGetCurrentLapTime -= SetPlayerLapTime;
+        GameEvents.OnGetCurrentTrackTime -= SetPlayerTrackTime;
     }
 
     private void Update()
@@ -32,17 +34,38 @@ public class TimeTrialsTimer : MonoBehaviour
             return;
 
         _currentTime += Time.deltaTime;
-        uiController.UpdateTimeTrialTimer(_currentTime);
+        _uiController.UpdateTimeTrialTimer(_currentTime);
     }
 
     private void StartTimer() 
     {
+        TimeTrials.ResetCurrentTrackTimes();
+        ResetTimer();
         _countTime = true;
+    }
+
+    // Get the amount of time the player too to complete one lap of the current track
+    private void SetPlayerLapTime(int currentLap)
+    {
+        var lapTime = _currentTime;
+        TimeTrials.SetCurrentPlayerLapTime(currentLap, lapTime);
+    }
+
+    // Get the amount of time the player took to complete Total Number of Laps per Track
+    private void SetPlayerTrackTime() 
+    {
+        var lapTime = _currentTime;
+        TimeTrials.SetCurrentPlayerTackTime(lapTime);
     }
 
     private void EndTimer() 
     {
         _countTime = false;
-        _finalTime = _currentTime;
+    }
+
+    private void ResetTimer() 
+    {
+        _currentTime = 0.0f;
+        _uiController.UpdateTimeTrialTimer(_currentTime);
     }
 }

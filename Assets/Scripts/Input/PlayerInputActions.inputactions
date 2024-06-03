@@ -6,10 +6,28 @@
             "id": "2dc311c2-d86d-4359-ae18-ee2c9e3bd456",
             "actions": [
                 {
-                    "name": "Move",
+                    "name": "Move_Keyboard",
                     "type": "Value",
                     "id": "8c0d4ffd-d04f-4e42-91a1-bc3b705ed51b",
                     "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Controller_Move_Forward",
+                    "type": "Button",
+                    "id": "fbffc51c-fc63-4411-8371-bb93d086e3c9",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Controller_Move_Backwards",
+                    "type": "Button",
+                    "id": "f98de728-f79e-4e5b-be0c-8839d8018a00",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -49,20 +67,18 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Controller_Steer",
+                    "type": "Value",
+                    "id": "ea65e261-fb35-4326-9b80-a8660a38652e",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
-                {
-                    "name": "",
-                    "id": "978bfe49-cc26-4a3d-ab7b-7d7a29327403",
-                    "path": "<Gamepad>/leftStick",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
                 {
                     "name": "WASD",
                     "id": "00ca640b-d935-4593-8157-c05846ea39b3",
@@ -70,7 +86,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Move",
+                    "action": "Move_Keyboard",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -81,7 +97,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Move",
+                    "action": "Move_Keyboard",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -92,7 +108,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Move",
+                    "action": "Move_Keyboard",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -103,7 +119,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Move",
+                    "action": "Move_Keyboard",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -114,7 +130,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Move",
+                    "action": "Move_Keyboard",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -125,7 +141,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Move",
+                    "action": "Move_Keyboard",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -136,7 +152,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Move",
+                    "action": "Move_Keyboard",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -147,7 +163,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Move",
+                    "action": "Move_Keyboard",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -158,7 +174,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Move",
+                    "action": "Move_Keyboard",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -169,7 +185,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "XR",
-                    "action": "Move",
+                    "action": "Move_Keyboard",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -179,8 +195,19 @@
                     "path": "<Joystick>/stick",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Joystick",
-                    "action": "Move",
+                    "groups": "Gamepad",
+                    "action": "Move_Keyboard",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f8601cf0-6eee-4f0c-a2ce-1ba3715e9d98",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move_Keyboard",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -247,6 +274,39 @@
                     "processors": "",
                     "groups": "",
                     "action": "AltFire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "87c74824-4aed-4efe-8215-1a66ae146e26",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Controller_Move_Forward",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "416d4cfd-aa3d-4ebc-ba9a-a358b6e08663",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Controller_Move_Backwards",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "df42134b-dada-4c9f-b74d-0610e023d22d",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Controller_Steer",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -5,6 +5,12 @@ using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
+    private enum CursorState 
+    {
+        UNLOCKED = 0,
+        LOCKED
+    }
+
     [Space(10)]
     [Header("Player Stats")]
     [SerializeField] private TextMeshProUGUI _playerVelocity;
@@ -23,6 +29,7 @@ public class UIController : MonoBehaviour
 
     [Space(10)]
     [Header("Screens")]
+    [SerializeField] private GameObject _leaderboardScreen;
     [SerializeField] private GameObject _gameOverScreen;
     [SerializeField] private GameObject _debugScreen;
 
@@ -44,8 +51,7 @@ public class UIController : MonoBehaviour
 
     private void Start()
     {
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        SetCursorState(CursorState.LOCKED);
     }
 
     private void OnDisable()
@@ -65,11 +71,13 @@ public class UIController : MonoBehaviour
         GameEvents.OnPlayerFuelUpdate += UpdateFuelAmount;
         GameEvents.OnPlayerBoostChange += UpdateBoostAmount;
 
+        // Gameplay UI
         GameEvents.OnEnemyCountUpdate += EnemyCountUI;
-
         GameEvents.OnCountdownUpdate += Countdown;
-
         GameEvents.OnLapCountUpdate += UpdateLapCount;
+
+        // Screens
+        GameEvents.OnSetLeaderboardStatus += SetLeaderboard;
     }
 
     private void UnsubscribeToEvents() 
@@ -83,13 +91,30 @@ public class UIController : MonoBehaviour
         GameEvents.OnPlayerFuelUpdate -= UpdateFuelAmount;
         GameEvents.OnPlayerBoostChange -= UpdateBoostAmount;
 
+        // Gameplay UI
         GameEvents.OnEnemyCountUpdate -= EnemyCountUI;
-
         GameEvents.OnCountdownUpdate -= Countdown;
-
         GameEvents.OnLapCountUpdate -= UpdateLapCount;
+
+        // Screens
+        GameEvents.OnSetLeaderboardStatus -= SetLeaderboard;
     }
     #endregion
+
+    private void SetCursorState(CursorState cursorState)
+    {
+        switch (cursorState)
+        {
+            case CursorState.UNLOCKED:
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+                break;
+            case CursorState.LOCKED:
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+                break;
+        }
+    }
 
     private void UpdateHealthUI(float newHealth) 
     {
@@ -122,20 +147,15 @@ public class UIController : MonoBehaviour
     }
 
     public void UpdateTimeTrialTimer(float newTime)
-    {        
-        float mins = Mathf.FloorToInt(newTime / 60f);
-        float secs = Mathf.FloorToInt(newTime % 60);
-        float centiSeconds = Mathf.FloorToInt((newTime % 1f) * 100);
-
-        string time = $"{mins:00}:{secs:00}.{centiSeconds:00}";
-
-        _timeTrialTimerText.text = $"{time}";
+    {
+        string time = TimeTrials.ParseTime(newTime);
+        _timeTrialTimerText.text = time;
     }
 
     private void UpdateLapCount(int newCount)
     {
         newCount += 1;
-        _lapCountText.text = $"Lap {newCount}/";
+        _lapCountText.text = $"Lap {newCount}/3";
     }
 
     // Count Enemies in Current Level
@@ -168,12 +188,29 @@ public class UIController : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
     }
 
+    #region Screens
+
+    private void SetLeaderboard(bool isActive)
+    {
+        SetCursorState(CursorState.UNLOCKED);
+        _leaderboardScreen.SetActive(isActive);
+    }
+
     private void SetGameOverScreen(bool isActive)
     {
         _gameOverScreen.SetActive(isActive);
     }
 
+    #endregion
+
     #region Button Presses
+
+    public void OnLeaderboardContinueButtonPressed() 
+    {
+        SetCursorState(CursorState.LOCKED);
+        SetLeaderboard(false);
+        GameEvents.RoomProgression(RoomCollection.HUB_ROOM);
+    }
 
     public void OnGameOverRestartPressed() 
     {

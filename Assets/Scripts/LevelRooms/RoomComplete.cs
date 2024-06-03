@@ -23,6 +23,8 @@ public class RoomComplete : MonoBehaviour
     private bool _hasPlayerEntered = false;
     private int _currentNumOfLaps = 0;
 
+    private const int HUB_ROOM_INDEX = (int)RoomCollection.HUB_ROOM;
+
     private void Start()
     {
         _trigger = GetComponent<Collider>();
@@ -35,11 +37,14 @@ public class RoomComplete : MonoBehaviour
        
         _renderer.enabled = false;
         _trigger.enabled = false;
+
+        _currentNumOfLaps = 0;
     }
 
     private void OnDisable()
     {
         GameEvents.OnRoomObjectivesComplete -= RoomCompleted;
+        _currentNumOfLaps = 0;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -48,15 +53,32 @@ public class RoomComplete : MonoBehaviour
             return;
 
         _hasPlayerEntered = true;
+
         _currentNumOfLaps += 1;
+        GameEvents.GetCurrentLapTime(_currentNumOfLaps);
+
         if (_currentNumOfLaps != _numOfLaps)
         {
             GameEvents.LapCountUpdate(_currentNumOfLaps);
             return;
         }
 
+        // Stop the Time Trials timer
         GameEvents.TimeTrialTimerEnd();
-        GameEvents.RoomProgression(_roomCollection);
+
+        // Save the Time for the Total Time to Complete Track
+        GameEvents.GetCurrentTrackTime();
+
+        // Display the Leaderboard
+        int currentLevelIndex = GameManager.GetCurrentRoomIndex();
+        if (currentLevelIndex == HUB_ROOM_INDEX)
+        {
+            // Move to next level
+            GameEvents.RoomProgression(_roomCollection);
+            return;
+        }
+
+        GameEvents.SetLeaderboardStatus(true);
     }
 
     private void OnTriggerExit(Collider other)
