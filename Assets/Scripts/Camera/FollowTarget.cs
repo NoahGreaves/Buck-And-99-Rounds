@@ -7,7 +7,7 @@ public class FollowTarget : MonoBehaviour
     // Camera
     [Header("Camera")]
     [SerializeField] private Transform _cameraFollowTarget;
-    [SerializeField] private float _cameraSensitivity = 0.25f;
+    //[SerializeField] private float _cameraSensitivity = 0.25f;
 
     // MAKE A VEHCILE SCRIPT
     [SerializeField] private GameObject _currentVehicle;

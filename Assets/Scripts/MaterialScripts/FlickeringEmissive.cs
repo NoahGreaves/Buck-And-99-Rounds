@@ -23,7 +23,6 @@ public class FlickeringEmissive : MonoBehaviour
     {
         _renderer = GetComponent<Renderer>();
         _brightnessCurve.postWrapMode = WrapMode.Loop;
-        print(_renderer.materials.Length);
         foreach (Material material in _renderer.materials)
         {
             if (_renderer.material.enabledKeywords.Any(item => item.name == EMISSIVE_KEYWORD)

@@ -30,11 +30,7 @@ public class PlayerMovement : MonoBehaviour
     // Engine Rigidbody -> Gets detached and is controlled while the vehicle art is set to this objects position each frame
     private Rigidbody _rb;
     private Vector2 _moveInput;
-    private LayerMask _groundMask = 10;
     private Fuel _playerFuel;
-
-    private bool _grounded;
-    [SerializeField] private float GROUND_CHECK_DISTANCE = 1f;
 
     private bool _canPlayerSpeedKill = false;
     public bool CanPlayerSpeedKill { get => _canPlayerSpeedKill; }
@@ -99,13 +95,7 @@ public class PlayerMovement : MonoBehaviour
             _rb.AddForce((_fallModifier) * Time.deltaTime * Physics.gravity);
         }
 
-        // Checks if player is on the ground
-        _grounded = IsGrounded(out RaycastHit hit);
-        //Debug.DrawLine(_model.transform.position, _model.transform.up * (-GROUND_CHECK_DISTANCE), Color.green);
-        //Player.GroundNormal = hit.normal;
-        Player.IsGrounded = _grounded;
-
-        if (_grounded)
+        if (Player.IsGrounded)
         {
             //var target = new Vector3(hit.normal.x, _model.transform.rotation.y, hit.normal.z);
             //_model.transform.up = Vector3.Lerp(_model.transform.up, target, Time.deltaTime * 1f);
@@ -121,7 +111,7 @@ public class PlayerMovement : MonoBehaviour
     #region Player Input
     public void OnMove(InputAction.CallbackContext context)
     {
-        if (!_grounded || !Player.CanMove)
+        if (!Player.IsGrounded || !Player.CanMove)
         {
             return;
         }
@@ -201,18 +191,6 @@ public class PlayerMovement : MonoBehaviour
             _playerFuel.SetUseFuel(true);
         else
             _playerFuel.SetUseFuel(false);
-    }
-
-    private bool IsGrounded(out RaycastHit hit)
-    {
-        bool rayHitGround = Physics.Raycast(_model.transform.position, _model.transform.TransformDirection(Vector3.down) * GROUND_CHECK_DISTANCE, out hit, _groundMask);
-        if (rayHitGround)
-            return true;
-        else
-            return false;
-        //return Physics.Raycast(transform.position, -Vector3.up, distToGround + 0.1, (int)_groundMask);
-        //distToGround = GetComponent<Collider>().bounds.extents.y;
-        //return Physics.Raycast(transform.position, -Vector3.up, GROUND_CHECK_DISTANCE, (int)_groundMask);
     }
 
     private void CheckPlayerCanKillWithSpeed()
