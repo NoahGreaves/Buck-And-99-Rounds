@@ -51,7 +51,7 @@ public class UIController : MonoBehaviour
 
     private void Start()
     {
-        SetCursorState(CursorState.LOCKED);
+        //SetCursorState(CursorState.LOCKED);
     }
 
     private void OnDisable()
@@ -192,7 +192,7 @@ public class UIController : MonoBehaviour
 
     private void SetLeaderboard(bool isActive)
     {
-        SetCursorState(CursorState.UNLOCKED);
+        //SetCursorState(CursorState.UNLOCKED);
         _leaderboardScreen.SetActive(isActive);
     }
 
@@ -207,7 +207,7 @@ public class UIController : MonoBehaviour
 
     public void OnLeaderboardContinueButtonPressed() 
     {
-        SetCursorState(CursorState.LOCKED);
+       // SetCursorState(CursorState.LOCKED);
         SetLeaderboard(false);
         GameEvents.RoomProgression(RoomCollection.HUB_ROOM);
     }

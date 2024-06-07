@@ -16,7 +16,7 @@ public static class Player
 
     public static bool IsMoving = false;
 
-    public static Vehicle CurrentPlayerVehicle = null;
+    public static PlayerVehicle CurrentPlayerVehicle = null;
 
     public static bool IsGrounded = false;
     public static Vector3 GroundNormal = new Vector3();

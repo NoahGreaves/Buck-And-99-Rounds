@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class VehicleModelPosition : MonoBehaviour
+public class PlayerVehicleModelPosition : MonoBehaviour
 {
     [SerializeField] private GameObject _playerCar;
-    [SerializeField] private float _turnSpeed = 30f;
+    [SerializeField] private float _turnSpeed = 100f;
+    [SerializeField] private float _groundCheckDistance = 1f;
 
     private PlayerInputActions _playerInputActions;
     private Vector2 _rotationInput;
     
     private float _yOffset = 0.75f;
-
-    private Ray _groundCastRay;
 
     private void Awake()
     {
@@ -48,13 +47,11 @@ public class VehicleModelPosition : MonoBehaviour
     private void GroundCheck()
     {
         RaycastHit hit;
-        float distance = 1f;
         Vector3 dir = new Vector3(0, -1);
-        if (Physics.Raycast(transform.position, dir, out hit, distance))
+        if (Physics.Raycast(transform.position, dir, out hit, _groundCheckDistance))
             Player.IsGrounded = true;
         else
             Player.IsGrounded = false;
-        print(Player.IsGrounded);
     }
 
     private void SetRotation()
@@ -72,14 +69,13 @@ public class VehicleModelPosition : MonoBehaviour
 
         // Set Vehicle Rotation only while the player is moving
         float newRot = Player.IsMoving ? (_rotationInput.x * _turnSpeed) * Time.deltaTime : 0f;
-        transform.Rotate(0, newRot, 0, Space.World);
+        transform.Rotate(0, newRot, 0, Space.Self);
     }
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        float distance = 1f;
         Vector3 dir = new Vector3(0, -1);
-        Gizmos.DrawRay(transform.position * distance, dir);
+        Gizmos.DrawRay(transform.position * _groundCheckDistance, dir);
     }
 }
