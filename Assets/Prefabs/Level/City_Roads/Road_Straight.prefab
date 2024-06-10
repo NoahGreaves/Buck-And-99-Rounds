@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3058995121108505414}
   - component: {fileID: 3389848878356117967}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -63,7 +63,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4532326834836369715}
   - component: {fileID: 6377144112626756814}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -312,6 +312,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 6ab22960a4992534cb68dd275ab5ab68, type: 3}
       propertyPath: m_Name
       value: road_straightBarrier
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 6ab22960a4992534cb68dd275ab5ab68, type: 3}
+      propertyPath: m_Layer
+      value: 13
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

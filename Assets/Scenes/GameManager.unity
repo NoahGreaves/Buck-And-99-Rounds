@@ -393,7 +393,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7504809046042987591, guid: caa21f7d7461c6f49ac6f6f8e703f5f2, type: 3}
   m_PrefabInstance: {fileID: 1944306346}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 900535264}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 06895dad9f821cb40ab304e6383fa05b, type: 3}
@@ -2233,11 +2233,6 @@ MonoBehaviour:
   - {fileID: 10883773}
   - {fileID: 9643189}
   - {fileID: 504437797}
---- !u!1 &900535264 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2012178837352438109, guid: caa21f7d7461c6f49ac6f6f8e703f5f2, type: 3}
-  m_PrefabInstance: {fileID: 1944306346}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &909242108
 GameObject:
   m_ObjectHideFlags: 0
@@ -3263,9 +3258,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b78e2d8656f9d1f429698fecd13a25fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bombLauncher: {fileID: 1807321191}
-  _forwardShield: {fileID: 1704081138}
-  _mineDropper: {fileID: 900535264}
+  _bombLauncher: {fileID: 0}
+  _forwardShield: {fileID: 0}
+  _mineDropper: {fileID: 0}
 --- !u!114 &1363155982
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4844,11 +4839,6 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!1 &1704081138 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 9199198826849731557, guid: caa21f7d7461c6f49ac6f6f8e703f5f2, type: 3}
-  m_PrefabInstance: {fileID: 1944306346}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1752766943
 GameObject:
   m_ObjectHideFlags: 0
@@ -4975,11 +4965,6 @@ RectTransform:
   m_AnchoredPosition: {x: -5, y: 0}
   m_SizeDelta: {x: -20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &1807321191 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 801418162433011956, guid: caa21f7d7461c6f49ac6f6f8e703f5f2, type: 3}
-  m_PrefabInstance: {fileID: 1944306346}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1851868790 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 165918147506242376, guid: caa21f7d7461c6f49ac6f6f8e703f5f2, type: 3}
@@ -6077,9 +6062,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: AIVehicleController_V1
       objectReference: {fileID: 0}
+    - target: {fileID: 449471706004443212, guid: db49c46455b128643996183b5b1bb6ac, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3250604610382305532, guid: db49c46455b128643996183b5b1bb6ac, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 8.07
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 3250604610382305532, guid: db49c46455b128643996183b5b1bb6ac, type: 3}
       propertyPath: m_LocalPosition.y
@@ -6087,7 +6076,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3250604610382305532, guid: db49c46455b128643996183b5b1bb6ac, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -141.8
       objectReference: {fileID: 0}
     - target: {fileID: 3250604610382305532, guid: db49c46455b128643996183b5b1bb6ac, type: 3}
       propertyPath: m_LocalRotation.w
@@ -6116,6 +6105,30 @@ PrefabInstance:
     - target: {fileID: 3250604610382305532, guid: db49c46455b128643996183b5b1bb6ac, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3843569719025406643, guid: db49c46455b128643996183b5b1bb6ac, type: 3}
+      propertyPath: _rayDistance
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5983238212140890345, guid: db49c46455b128643996183b5b1bb6ac, type: 3}
+      propertyPath: _turnSpeed
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 5983238212140890345, guid: db49c46455b128643996183b5b1bb6ac, type: 3}
+      propertyPath: _rayDistance
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5983238212140890345, guid: db49c46455b128643996183b5b1bb6ac, type: 3}
+      propertyPath: _numberOfRays
+      value: 36
+      objectReference: {fileID: 0}
+    - target: {fileID: 5983238212140890345, guid: db49c46455b128643996183b5b1bb6ac, type: 3}
+      propertyPath: _testDistanceToWall
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5983238212140890345, guid: db49c46455b128643996183b5b1bb6ac, type: 3}
+      propertyPath: _startWallDetectAngle
+      value: -90
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

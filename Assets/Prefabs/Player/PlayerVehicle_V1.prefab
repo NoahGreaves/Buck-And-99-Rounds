@@ -268,7 +268,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 487911609720881599}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d5bb473ddede994185f6070b3024ac7, type: 3}
+  m_Script: {fileID: 11500000, guid: 01f1408bb33d04b4d85919b8bf9d5029, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &768689250018685513
@@ -619,12 +619,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b3e5031961c1dc499bd2475d151958b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _enableBoostAfterTurn: 1
   _model: {fileID: 5040184001581289493}
   _moveSpeed: 25
   _maxSpeed: 200
+  _turnSpeedMultiplier: 1.5
   _boostAmount: 15
   _boostIncrement: 1.5
   _boostFactor: 1
+  _fallModifier: 2.5
   _minSpeedToKill: 5
 --- !u!114 &5593428482475131459
 MonoBehaviour:
@@ -1380,7 +1383,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerCar: {fileID: 487911609720881599}
   _turnSpeed: 120
-  _positionOffset: -1
+  _groundCheckDistance: 1
 --- !u!4 &5672710382564428463 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6f195dcf2df40be4ba52c81983bed007, type: 3}

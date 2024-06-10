@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5948667841654127683}
   - component: {fileID: 9080946677609732420}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25,13 +25,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3712975835152517335}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.000000104308114, y: -0.000000059604638, z: -0.23171675, w: 0.97278327}
-  m_LocalPosition: {x: 0, y: 0.2911, z: -0.4875}
+  m_LocalRotation: {x: -0.12697369, y: 0.030244917, z: -0.22973378, w: 0.9644612}
+  m_LocalPosition: {x: 0, y: 0.2911, z: -0.481}
   m_LocalScale: {x: 1.139, y: 0.0646283, z: 0.041991007}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4075140912119041598}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -26.796}
+  m_LocalEulerAnglesHint: {x: -13.357, y: 6.888, z: -27.604}
 --- !u!65 &9080946677609732420
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -179,7 +179,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5317525254522886294}
   - component: {fileID: 4665867564104038849}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -194,13 +194,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8512860318295862166}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.000000104308114, y: -0.000000059604638, z: -0.23171675, w: 0.97278327}
-  m_LocalPosition: {x: 0, y: 0.2911, z: 0.4875}
+  m_LocalRotation: {x: 0.1269738, y: -0.03024527, z: -0.22973436, w: 0.96446097}
+  m_LocalPosition: {x: -0, y: 0.2911, z: 0.481}
   m_LocalScale: {x: 1.139, y: 0.0646283, z: 0.041991007}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4075140912119041598}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -26.796}
+  m_LocalEulerAnglesHint: {x: 13.357, y: -6.888, z: -27.604}
 --- !u!65 &4665867564104038849
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -285,6 +285,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 6bcafe7dab5938b4e83785b6d6dbc4dd, type: 3}
       propertyPath: m_Name
       value: road_slantHighBarrier
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 6bcafe7dab5938b4e83785b6d6dbc4dd, type: 3}
+      propertyPath: m_Layer
+      value: 13
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

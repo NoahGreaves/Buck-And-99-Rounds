@@ -40,6 +40,11 @@ public class Health : MonoBehaviour
         CurrentHealth = _maxHealth;
     }
 
+    private void OnDisable()
+    {
+        GameEvents.OnRoomReset -= ResetHealth;
+    }
+
     public void TakeDamage(float damage)
     {
         // If the player speed can kill, dont deal damager to player
